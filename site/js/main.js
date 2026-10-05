@@ -124,8 +124,72 @@ $('#ano').textContent = new Date().getFullYear();
       </button>
     </li>`).join('');
 
+  /* Carrossel perpétuo no celular: roda devagar sozinho, para com o dedo em cima
+     (ou com o lightbox aberto) e volta a rodar quando a pessoa solta.
+     Os prints são duplicados pra emendar o fim no começo sem salto. */
+  const mobile = matchMedia('(max-width: 767px)');
+  const SPEED = 26; // px por segundo: dá tempo de ler o gancho de cada print
+  let auto = null;
+  const resumeSoon = (ms = 900) => auto && auto.resume(ms);
+  const stopNow = () => auto && auto.pause();
+  const startAuto = () => {
+    if (auto || !mobile.matches || reduced.matches) return;
+    const originals = [...list.children];
+    originals.forEach(li => {
+      const c = li.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      c.classList.add('is-clone');
+      $('button', c).tabIndex = -1;
+      list.append(c);
+    });
+    list.classList.add('is-auto');
+    let pos = list.scrollLeft, last = 0, raf = 0, held = false, visible = false, timer = 0;
+    const loopW = () => list.children[originals.length].offsetLeft - originals[0].offsetLeft;
+    const tick = t => {
+      const dt = last ? Math.min((t - last) / 1000, .1) : 0;
+      last = t;
+      const w = loopW();
+      pos += SPEED * dt;
+      if (pos >= w) pos -= w;
+      list.scrollLeft = pos;
+      raf = requestAnimationFrame(tick);
+    };
+    const run = () => {
+      cancelAnimationFrame(raf);
+      if (held || !visible || box.open) return;
+      const w = loopW();
+      pos = list.scrollLeft >= w ? list.scrollLeft - w : list.scrollLeft;
+      last = 0;
+      raf = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; run(); });
+    io.observe(list);
+    auto = {
+      pause() { clearTimeout(timer); held = true; cancelAnimationFrame(raf); },
+      resume(ms) { clearTimeout(timer); timer = setTimeout(() => { held = false; run(); }, ms); },
+      destroy() {
+        this.pause(); io.disconnect();
+        $$('.is-clone', list).forEach(c => c.remove());
+        list.classList.remove('is-auto');
+        auto = null;
+      },
+    };
+  };
+  list.addEventListener('touchstart', stopNow, { passive: true });
+  list.addEventListener('touchend', () => resumeSoon(), { passive: true });
+  list.addEventListener('touchcancel', () => resumeSoon(), { passive: true });
+  list.addEventListener('mouseenter', stopNow);
+  list.addEventListener('mouseleave', () => resumeSoon(300));
+  list.addEventListener('focusin', stopNow);
+  list.addEventListener('focusout', () => resumeSoon());
+  const syncAuto = () => (mobile.matches && !reduced.matches ? startAuto() : auto && auto.destroy());
+  mobile.addEventListener('change', syncAuto);
+  reduced.addEventListener('change', syncAuto);
+
   $$('[data-scroll="deps"]').forEach(btn => btn.addEventListener('click', () => {
+    stopNow();
     list.scrollBy({ left: +btn.dataset.dir * list.clientWidth * .8, behavior: reduced.matches ? 'auto' : 'smooth' });
+    resumeSoon(2500);
   }));
 
   const box = $('#lightbox');
@@ -144,8 +208,11 @@ $('#ano').textContent = new Date().getFullYear();
     const b = e.target.closest('.dep');
     if (!b) return;
     show(+b.dataset.i);
+    stopNow();
     box.showModal();
   });
+  box.addEventListener('close', () => resumeSoon(600));
+  syncAuto();
   $('.lightbox__close').addEventListener('click', () => box.close());
   $('.lightbox__prev').addEventListener('click', () => show(cur - 1));
   $('.lightbox__next').addEventListener('click', () => show(cur + 1));
@@ -231,13 +298,19 @@ addEventListener('DOMContentLoaded', () => {
 
     /* controle: tamanho e posição de base (menor e mais perto da mão que no recorte) */
     gsap.set('.hero__controle', { transformOrigin: '49.5% 55%', x: 0, y: 0, yPercent: 3.5, scale: .72, transformPerspective: 900 });
+    /* celular: títulos do Illan aparecem um de cada vez conforme a tela desce */
+    if (!desk) {
+      prep('.proof li', { opacity: 0, y: 24 });
+      reveal('.proof li', { opacity: 0, y: 24 }, { stagger: .3, duration: .7 });
+    }
     /* hero: entrada única */
     const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     // o H1 é o LCP: ele só desliza, sem fade, pra pintar na hora
     // com data-letters o H1 usa só a revelação de letras
     if ($('.hero__title:not([data-letters])')) heroTl.from('.hero__title', { y: 28, duration: .8 }, 0);
     heroTl
-      .from('.hero__text > :not(.hero__title)', { opacity: 0, y: 24, duration: .7, stagger: .08 }, 0)
+      // no celular os títulos (.proof) ficam de fora: entram um por um com a rolagem, logo abaixo
+      .from(desk ? '.hero__text > :not(.hero__title)' : '.hero__text > :not(.hero__title):not(.proof)', { opacity: 0, y: 24, duration: .7, stagger: .08 }, 0)
       .from('.hero__img', { opacity: 0, y: 40, scale: .96, duration: 1 }, .1)
       .from('.hero__glow', { opacity: 0, scale: .6, duration: 1.2 }, 0)
       .from('.float', { opacity: 0, y: 20, scale: .9, duration: .6, stagger: .15 }, .55)
