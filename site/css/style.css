@@ -111,6 +111,8 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 
 .cta{ display:flex; flex-direction:column; align-items:flex-start; gap:12px; margin-top:32px; }
 .cta--c{ align-items:center; text-align:center; }
+/* celular e tablet: todo botão (e a microlinha embaixo) fica no meio */
+@media (max-width:959px){ .cta{ align-items:center; text-align:center; } }
 .micro{ font-size:.8125rem; color:var(--txt-2); }
 
 .icon-btn{
@@ -388,6 +390,8 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
   border:1px solid var(--line-r); box-shadow:var(--glow), 0 30px 60px -20px rgba(0,0,0,.8);
   font-family:var(--f-title); text-transform:uppercase;
 }
+/* coluna única: capa centralizada */
+@media (max-width:999px){ .capa{ margin-inline:auto; } }
 .capa::before{ content:""; position:absolute; inset:0; background:url("../assets/background-1.webp") center/cover; opacity:.35; mix-blend-mode:screen; }
 .capa > *{ position:relative; }
 .capa__tag{ font-family:var(--f-body); font-weight:700; font-size:.625rem; letter-spacing:.14em; color:#fff; opacity:.8; margin-bottom:auto; }
@@ -621,6 +625,7 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 .final__title span{ display:block; }
 .final__side{ display:grid; gap:16px; justify-items:start; }
 .final__side p{ font-weight:600; max-width:40ch; }
+@media (max-width:959px){ .final__side .btn{ justify-self:center; } }
 .final mark.fill{ font-size:.8em; }
 @media (min-width:900px){
   .final{ padding:72px 0; }
