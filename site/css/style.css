@@ -253,12 +253,12 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 .float--b{ right:0; bottom:8%; }
 
 
-/* celular: não sobra espaço livre ao lado da figura; os cards viram uma linha logo abaixo dela,
-   subindo um pouco sobre a base desbotada da foto, sem cobrir rosto, controle ou mão */
+/* celular: não sobra espaço livre ao lado da figura; os cards viram uma linha abaixo dela,
+   com respiro em relação à mão e à faixa seguinte */
 @media (max-width:767px){
-  .hero__media{ display:grid; grid-template-columns:1fr 1fr; justify-items:center; align-items:start; column-gap:10px; }
+  .hero__media{ display:grid; grid-template-columns:1fr 1fr; justify-items:center; align-items:start; column-gap:10px; padding-bottom:32px; }
   .hero__media > .hero__figure{ grid-column:1 / -1; }
-  .float{ position:relative; inset:auto; max-width:none; width:100%; margin-top:-34px; }
+  .float{ position:relative; inset:auto; max-width:none; width:100%; margin-top:20px; }
 }
 @media (min-width:600px){
   .float{ max-width:260px; font-size:.8125rem; }
