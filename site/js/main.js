@@ -163,15 +163,16 @@ $('#ano').textContent = new Date().getFullYear();
 
 /* ---------- hero: fundo em vídeo ----------
    Com movimento reduzido ou economia de dados, fica só o poster.
-   No celular carrega a versão leve (720p, < 2 MB). Fora da tela, pausa. */
+   No celular carrega a versão vertical (720×1280, recorte da esquerda). Fora da tela, pausa. */
 {
   const v = $('.hero__video');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches || navigator.connection?.saveData;
   if (v && !still) {
     const small = matchMedia('(max-width: 959px)').matches;
     $$('source', v).forEach(s => {
-      s.src = small ? s.dataset.src.replace('hero-bg.', 'hero-bg-mobile.') : s.dataset.src;
+      s.src = small ? s.dataset.src.replace('hero-bg.', 'hero-bg-mobile.').replace('v=2', 'v=3') : s.dataset.src;
     });
+    if (small) v.poster = 'assets/hero-bg-poster-mobile.jpg?v=3';
     v.preload = 'auto';
     v.autoplay = true;
     v.addEventListener('playing', () => v.classList.add('is-on'), { once: true });
