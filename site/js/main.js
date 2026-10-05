@@ -7,7 +7,7 @@ const CHECKOUT_URL = ''; // [PREENCHER: URL do checkout]
 
 // Jogadores de campeonato que já tiveram o Illan como coach. Troque foto e texto só aqui.
 // foto: PNG/WebP com fundo transparente dentro de site/ (ex.: 'assets/jogadores/nick.webp'). Vazio = silhueta.
-// pos: posição horizontal do recorte da foto no card (0% = esquerda). titulos: um por linha.
+// pos: posição horizontal do recorte da foto (0% = esquerda). titulos: um por linha.
 const players = [
   { foto: 'assets/jogadores/mhenrique7.webp', pos: '18%', nick: '@mhenrique7_', nome: 'Matheus Henrique',
     titulos: ['Campeão Sul-Americano (EA FC 26)', 'Top 2 e-Libertadores (PY)', 'Top 2 Qualify 3'] },
@@ -75,13 +75,17 @@ $('#ano').textContent = new Date().getFullYear();
   const fill = t => (t.startsWith('[') ? `<mark class="fill">${t}</mark>` : t);
   grid.innerHTML = players.map(p => `
     <li>
-      <article class="fut-card${p.foto ? ' fut-card--foto' : ''}" tabindex="0" aria-label="${p.nick}${p.nome ? ` (${p.nome})` : ''}, já teve o Illan como coach. ${p.titulos.join('. ')}">
-        ${p.foto
-          ? `<img class="fut-card__img" src="${p.foto}" alt="" loading="lazy" decoding="async" style="--pos:${p.pos || '50%'}">`
-          : `<span class="fut-card__ph">${silhouette}</span>`}
-        <p class="fut-card__coach">Illan foi coach dele</p>
-        <h3 class="fut-card__nick">${fill(p.nick)}</h3>
-        <ul class="fut-card__info">${p.titulos.map(t => `<li>${fill(t)}</li>`).join('')}</ul>
+      <article class="fut-card" tabindex="0" aria-label="${p.nick}${p.nome ? ` (${p.nome})` : ''}, já teve o Illan como coach. ${p.titulos.join('. ')}">
+        <div class="fut-card__media">
+          ${p.foto
+            ? `<img class="fut-card__img" src="${p.foto}" alt="" loading="lazy" decoding="async" style="--pos:${p.pos || '50%'}">`
+            : `<span class="fut-card__ph">${silhouette}</span>`}
+        </div>
+        <div class="fut-card__body">
+          <p class="fut-card__coach">Illan foi coach dele</p>
+          <h3 class="fut-card__nick">${fill(p.nick)}</h3>
+          <ul class="fut-card__info">${p.titulos.map(t => `<li>${fill(t)}</li>`).join('')}</ul>
+        </div>
       </article>
     </li>`).join('');
 
