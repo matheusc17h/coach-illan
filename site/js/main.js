@@ -5,12 +5,14 @@
 // Todos os CTAs de compra usam esta URL. Enquanto estiver vazia, os botões levam à seção de oferta.
 const CHECKOUT_URL = ''; // [PREENCHER: URL do checkout]
 
-// Os 6 jogadores da seção "Quem joga com o Illan". Troque foto e texto só aqui.
-// foto: caminho dentro de site/ (ex.: 'assets/jogadores/foto-jogador-1.webp'). Vazio = silhueta.
+// Jogadores de campeonato que já tiveram o Illan como coach. Troque foto e texto só aqui.
+// foto: PNG/WebP com fundo transparente dentro de site/ (ex.: 'assets/jogadores/nick.webp'). Vazio = silhueta.
+// pos: posição horizontal do recorte da foto no card (0% = esquerda). titulos: um por linha.
 const players = [
-  { foto: '', nick: '[PREENCHER: @jogador 1]', info: '[PREENCHER: conquista ou divisão]' },
-  { foto: '', nick: '[PREENCHER: @jogador 2]', info: '[PREENCHER: conquista ou divisão]' },
-  { foto: '', nick: '[PREENCHER: @jogador 3]', info: '[PREENCHER: conquista ou divisão]' },
+  { foto: 'assets/jogadores/mhenrique7.webp', pos: '18%', nick: '@mhenrique7_', nome: 'Matheus Henrique',
+    titulos: ['Campeão Sul-Americano (EA FC 26)', 'Top 2 e-Libertadores (PY)', 'Top 2 Qualify 3'] },
+  { foto: '', nick: '[PREENCHER: @jogador 2]', titulos: ['[PREENCHER: títulos]'] },
+  { foto: '', nick: '[PREENCHER: @jogador 3]', titulos: ['[PREENCHER: títulos]'] },
 ];
 
 // Prints reais dos alunos. "hook" é um trecho copiado do próprio print, com a grafia original.
@@ -71,14 +73,15 @@ $('#ano').textContent = new Date().getFullYear();
   const grid = $('#fut-grid');
   const silhouette = '<svg viewBox="0 0 100 110" aria-hidden="true"><circle cx="50" cy="32" r="22" fill="currentColor"/><path d="M8 110c0-26 19-44 42-44s42 18 42 44z" fill="currentColor"/></svg>';
   const fill = t => (t.startsWith('[') ? `<mark class="fill">${t}</mark>` : t);
-  grid.innerHTML = players.map((p, i) => `
+  grid.innerHTML = players.map(p => `
     <li>
-      <article class="fut-card" tabindex="0" aria-label="${p.nick}, ${p.info}">
+      <article class="fut-card${p.foto ? ' fut-card--foto' : ''}" tabindex="0" aria-label="${p.nick}${p.nome ? ` (${p.nome})` : ''}, já teve o Illan como coach. ${p.titulos.join('. ')}">
         ${p.foto
-          ? `<img class="fut-card__img" src="${p.foto}" alt="" loading="lazy" decoding="async">`
+          ? `<img class="fut-card__img" src="${p.foto}" alt="" loading="lazy" decoding="async" style="--pos:${p.pos || '50%'}">`
           : `<span class="fut-card__ph">${silhouette}</span>`}
+        <p class="fut-card__coach">Illan foi coach dele</p>
         <h3 class="fut-card__nick">${fill(p.nick)}</h3>
-        <p class="fut-card__info">${fill(p.info)}</p>
+        <ul class="fut-card__info">${p.titulos.map(t => `<li>${fill(t)}</li>`).join('')}</ul>
       </article>
     </li>`).join('');
 
