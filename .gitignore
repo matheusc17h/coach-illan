@@ -1,0 +1,13 @@
+# configurações e skills locais do Claude Code
+.claude/
+
+# prints de trabalho
+screenshots/
+
+# guia pago do curso: não publicar em repositório público
+Illan-Evolution-Guia-EA-FC-27.pdf
+
+# sistema
+Thumbs.db
+desktop.ini
+.DS_Store

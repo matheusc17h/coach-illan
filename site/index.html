@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Illan Evolution · Curso de EA FC 27 com o Coach Illan</title>
+<meta name="description" content="O FC 27 tirou a defesa da IA e passou pra sua mão. Aprenda a defender no manual, parar de tiltar na Weekend League e subir no Rivals com o método do Coach Illan, campeão sul-americano.">
+<meta name="theme-color" content="#060203">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%23d4136f'/%3E%3Cstop offset='1' stop-color='%23e8200f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Arial' font-weight='900' font-size='34' fill='%23fff' text-anchor='middle'%3EIE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- fontes sem bloquear a primeira pintura -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap"></noscript>
+<link rel="preload" as="image" href="assets/illan-hero-pessoa-hd.webp" fetchpriority="high">
+<link rel="stylesheet" href="css/style.css?v=15">
+</head>
+<body>
+
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 3h10v4a5 5 0 0 1-10 0V3z" fill="currentColor"/><path d="M7 5H3.5v1.5A3.5 3.5 0 0 0 7 10M17 5h3.5v1.5A3.5 3.5 0 0 1 17 10" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 12h3v4h-3z" fill="currentColor"/><path d="M7.5 21v-2.2c0-.9.7-1.6 1.6-1.6h5.8c.9 0 1.6.7 1.6 1.6V21z" fill="currentColor"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.5 2L5 13.5h6L10 22l9-12h-6.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5l13 7.5-13 7.5z" fill="currentColor"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+</svg>
+
+<!-- HEADER -->
+<header class="header" id="topo">
+  <div class="header__in">
+    <a class="logo" href="#topo" aria-label="Illan Evolution, voltar ao topo">
+      <span class="logo__a">Illan</span><span class="logo__b">Evolution</span>
+    </a>
+    <nav class="nav" id="menu" aria-label="Seções da página">
+      <a href="#pra-voce">Pra quem é</a>
+      <a href="#mudou">O que mudou no FC 27</a>
+      <a href="#aulas">Aulas</a>
+      <a href="#alunos">Alunos</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--sm js-cta header__cta" href="#oferta">Entrar no curso</a>
+    <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-title">
+  <!-- fundo em vídeo: o JS só liga o vídeo se houver movimento permitido; senão fica o poster -->
+  <div class="hero__bg" aria-hidden="true">
+    <video class="hero__video" muted loop playsinline preload="none" poster="assets/hero-bg-poster.jpg?v=2" tabindex="-1">
+      <source data-src="assets/hero-bg.webm?v=2" type="video/webm">
+      <source data-src="assets/hero-bg.mp4?v=2" type="video/mp4">
+    </video>
+  </div>
+  <div class="wrap hero__grid">
+    <div class="hero__text">
+      <p class="tag"><span class="tag__pill">Coach de EA FC 27</span><span class="tag__txt">campeão sul-americano</span></p>
+      <h1 class="hero__title" id="hero-title" data-letters>Pare de perder na Weekend League e <span class="hl">comece a jogar no manual.</span></h1>
+      <p class="hero__sub">O FC 27 tirou a defesa da IA e passou pra sua mão. O método de um campeão sul-americano te ensina a jogar assim, aula por aula.</p>
+      <ul class="chips" aria-label="O que você treina">
+        <li>Defesa manual</li>
+        <li>Fim do tilt</li>
+        <li>Weekend League planejada</li>
+      </ul>
+      <div class="cta">
+        <a class="btn btn--lg js-cta" href="#oferta">Quero parar de tiltar</a>
+        <p class="micro">Acesso imediato · Garantia de <mark class="fill">[PREENCHER: dias]</mark> dias · Pagamento seguro</p>
+      </div>
+      <ul class="proof" aria-label="Títulos do Coach Illan">
+        <li><svg aria-hidden="true"><use href="#i-trophy"/></svg>Campeão Sul-Americano</li>
+        <li>Top 8 Pro Open</li>
+        <li>Top 17 e-Libertadores</li>
+      </ul>
+    </div>
+
+    <div class="hero__media">
+      <span class="hero__glow" aria-hidden="true"></span>
+      <!-- Illan e controle em camadas separadas (mesmo enquadramento), pra animar cada um sozinho -->
+      <div class="hero__img hero__figure" role="img" aria-label="Coach Illan sorrindo, de blazer preto, com um controle de PS5 flutuando sobre a mão aberta.">
+        <img class="hero__pessoa" src="assets/illan-hero-pessoa-hd.webp" width="1296" height="1734" fetchpriority="high" alt="">
+        <div class="hero__controle-wrap"><img class="hero__controle" src="assets/illan-hero-controle.png" width="432" height="578" alt=""></div>
+      </div>
+      <figure class="float float--a">
+        <span class="float__ico float__ico--gold"><svg aria-hidden="true"><use href="#i-trophy"/></svg></span>
+        <figcaption><b>Nova divisão: Elite</b><span>"Consegui subir da div 2 pra elite sem perder nenhum jogo"</span></figcaption>
+      </figure>
+      <figure class="float float--b">
+        <span class="float__ico"><svg aria-hidden="true"><use href="#i-chat"/></svg></span>
+        <figcaption><b>Aluno do Illan</b><span>"Agora tomo 1 gol max por partida"</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- FAIXA -->
+<div class="strip">
+  <div class="wrap strip__in">
+    <p>Curso completo de EA FC 27, do <b>pré-jogo</b> à <b>Weekend League</b>.</p>
+    <ul class="strip__stats" aria-label="Números do curso">
+      <li><b>22</b> aulas</li>
+      <li><b>5</b> níveis</li>
+      <li><b>2</b> extras</li>
+      <li><b>4</b> semanas de plano</li>
+    </ul>
+  </div>
+</div>
+
+<!-- PRA QUEM É -->
+<section class="sec" id="pra-voce" aria-labelledby="pv-title">
+  <div class="wrap">
+    <h2 class="h2 h2--c" id="pv-title" data-letters="top 60%">Esse curso é <span class="hl">pra você que:</span></h2>
+    <ul class="pv">
+      <li class="pv__card">
+        <div class="pv__img"><img src="assets/card-tilt.png" width="600" height="750" loading="lazy" decoding="async" alt="Jogador irritado, com a mão no cabelo e o controle apertado na outra mão, depois de tomar um gol."></div>
+        <p>Tilta depois de um gol, <span class="hl">entrega o segundo</span> e fecha a Weekend League com raiva.</p>
+      </li>
+      <li class="pv__card">
+        <div class="pv__img"><img src="assets/card-ultimos-minutos.png" width="600" height="750" loading="lazy" decoding="async" alt="Jogador em choque olhando para a tela, boca entreaberta, controle abaixado."></div>
+        <p>Toma gol nos últimos 10 minutos de jogo que <span class="hl">estava ganhando</span>, e não sabe por quê.</p>
+      </li>
+      <li class="pv__card">
+        <div class="pv__img"><img src="assets/card-manual.png" width="600" height="750" loading="lazy" decoding="async" alt="Jogador calmo e concentrado, inclinado para a frente com as duas mãos no controle."></div>
+        <p>Quer subir no Rivals <span class="hl">sem precisar de time caro</span>, defendendo no manual.</p>
+      </li>
+    </ul>
+    <div class="cta cta--c">
+      <a class="btn btn--lg js-cta" href="#oferta">É pra mim: quero parar de tiltar</a>
+      <p class="micro">Marcou alguma? O problema não é talento. É método.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROVA RÁPIDA -->
+<section class="quotes" aria-label="O que os alunos dizem">
+  <div class="wrap">
+    <ul class="quotes__list">
+      <li><p>"Tava marcando igual uma porta, agora tomo 1 gol max por partida"</p><span>Aluno, no WhatsApp</span></li>
+      <li><p>"Suas aulas mudaram minha forma de enxergar o jogo"</p><span>Aluno, no WhatsApp</span></li>
+      <li><p>"Seu trabalho é muito foda. Fácil de entender"</p><span>Aluno, no WhatsApp</span></li>
+    </ul>
+    <p class="quotes__more"><a href="#depoimentos">Ver os 12 prints dos alunos</a></p>
+  </div>
+</section>
+
+<!-- O FC 27 MUDOU -->
+<section class="sec sec--glass" id="mudou" aria-labelledby="mudou-title">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2 class="h2" id="mudou-title" data-letters>O FC 27 tirou a defesa da IA. <span class="hl">Você mudou junto?</span></h2>
+      <p class="lead">É a edição que mais passou responsabilidade da máquina pra sua mão. Quem aprende o manual primeiro sai na frente de milhões de jogadores que ainda esperam o jogo defender por eles.</p>
+    </div>
+    <ul class="mudancas">
+      <li class="card">
+        <h3>A IA parou de dar bote</h3>
+        <p class="ba"><s>FC 26: o defensor da IA roubava sozinho</s><span>FC 27: ela só cobre espaço, quem rouba é você</span></p>
+        <p class="pra-voce">Troque cedo. Jockey primeiro, bote depois.</p>
+      </li>
+      <li class="card">
+        <h3>Pressão não age perto da sua área</h3>
+        <p class="ba"><s>FC 26: pressão de equipe no campo todo</s><span>FC 27: sem efeito no terço defensivo</span></p>
+        <p class="pra-voce">Perto da área, a defesa é manual. Compacta, sem bote desesperado.</p>
+      </li>
+      <li class="card">
+        <h3>O passe vai onde você mira</h3>
+        <p class="ba"><s>FC 26: a assistência corrigia pro espaço livre</s><span>FC 27: segue exatamente a sua mira</span></p>
+        <p class="pra-voce">Mirou errado, errou o passe. A mira virou treino.</p>
+      </li>
+      <li class="card">
+        <h3>Cobertura 100% manual</h3>
+        <p class="ba"><s>FC 26: saía sem querer no passe rasteiro</s><span>FC 27: toque duplo + mira e força</span></p>
+        <p class="pra-voce">Arma contra linha alta, se você treinar offline antes.</p>
+      </li>
+      <li class="card">
+        <h3>Escanteio manual, com Evasão</h3>
+        <p class="ba"><s>FC 26: o atacante ia sozinho pra melhor posição</s><span>FC 27: janela de controle e Evasão no R1/RB</span></p>
+        <p class="pra-voce">Escanteio virou habilidade. Quem treina faz gol.</p>
+      </li>
+      <li class="card">
+        <h3>Atributo manda mais que PlayStyle</h3>
+        <p class="ba"><s>FC 26: carta boa "só pelo ícone"</s><span>FC 27: Quick Step, Tiki Taka e Low Driven enfraquecidos</span></p>
+        <p class="pra-voce">Monte o time pelo número, não pelo ícone dourado.</p>
+      </li>
+    </ul>
+    <p class="note">A EA disse que não vai fazer grandes mudanças de balanceamento logo após o lançamento. O que você treinar agora continua valendo.</p>
+    <div class="cta cta--c">
+      <a class="btn btn--ghost" href="#aulas">Ver as 22 aulas</a>
+    </div>
+  </div>
+</section>
+
+<!-- PRAZER, COACH ILLAN -->
+<section class="sec sec--about" aria-labelledby="illan-title">
+  <div class="wrap about">
+    <div class="about__media">
+      <div class="about__photo">
+        <span class="about__glow" aria-hidden="true"></span>
+        <img src="assets/illan-1.webp" width="499" height="500" loading="lazy" decoding="async" alt="Coach Illan de braços cruzados, camiseta preta.">
+      </div>
+      <figure class="post">
+        <img src="assets/campeao.webp" width="800" height="1000" loading="lazy" decoding="async" alt="Arte do post 'Campeões Cash Cup Dezembro' com Coach Illan e o player MH.">
+        <figcaption><span class="post__selo">Campeões</span> Post do título, dezembro de 2025</figcaption>
+      </figure>
+    </div>
+    <div class="about__text">
+      <h2 class="about__title" id="illan-title" data-letters><span class="about__hi">Prazer,</span> <span class="hl">Coach Illan</span></h2>
+      <p class="about__role">Coach de EA FC e campeão sul-americano.</p>
+      <p>O Illan venceu a Cash Cup Dezembro jogando ao lado do player MH e foi campeão da América do Sul. Na legenda do título, ele escreveu:</p>
+      <blockquote class="quote">
+        <p>"Eu disse que voltaríamos ao topo, e conseguimos. Foram muitos dias de trabalho, dedicação e esforço até chegar a esse troféu."</p>
+        <cite>@coach__illan</cite>
+      </blockquote>
+      <p>É esse trabalho, organizado em níveis, que está no Illan Evolution.</p>
+      <ul class="trofeus" aria-label="Conquistas">
+        <li class="trofeus__top"><svg aria-hidden="true"><use href="#i-trophy"/></svg><span><b>Campeão Sul-Americano</b><small>Cash Cup Dezembro</small></span></li>
+        <li><span><b>Top 8</b><small>Pro Open</small></span></li>
+        <li><span><b>Top 8</b><small>Cash Cup</small></span></li>
+        <li><span><b>Top 17</b><small>e-Libertadores</small></span></li>
+      </ul>
+      <div class="cta">
+        <a class="btn btn--lg js-cta" href="#oferta">Quero aprender com um campeão</a>
+        <p class="micro">Acesso imediato · Pagamento seguro</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- O QUE TEM DENTRO -->
+<section class="sec" id="aulas" aria-labelledby="aulas-title">
+  <div class="wrap produto">
+    <div class="produto__side">
+      <h2 class="h2" id="aulas-title" data-letters>O que tem <span class="hl">dentro</span></h2>
+      <p class="lead">Cada aula resolve um problema concreto e termina com um exercício. A regra é uma só: um foco por vez.</p>
+      <div class="capa" aria-hidden="true">
+        <span class="capa__tag">Guia oficial do aluno</span>
+        <span class="capa__a">Illan</span>
+        <span class="capa__b">Evolution</span>
+        <span class="capa__ed">Edição EA FC 27</span>
+        <span class="capa__n">5 níveis · 22 aulas · 2 extras</span>
+      </div>
+      <ul class="checks">
+        <li>22 aulas em 5 níveis, do pré-jogo à alta performance</li>
+        <li>3 capítulos sobre o que mudou do FC 26 pro FC 27</li>
+        <li>Exercício no fim de cada aula</li>
+        <li>Extras de Weekend League e Rivals</li>
+        <li>Plano de 4 semanas com meta por semana</li>
+        <li>Diário de partidas e checklist pré-partida</li>
+      </ul>
+    </div>
+    <div class="niveis">
+      <details class="nivel">
+        <summary><span class="nivel__n">A–C</span><span class="nivel__t">Antes de tudo</span><span class="nivel__c">3 capítulos</span><svg class="nivel__i" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <ol class="aulas">
+          <li><b>A</b>Por que você trava (e não é falta de talento)</li>
+          <li><b>B</b>FC 26 → FC 27: tudo o que mudou</li>
+          <li><b>C</b>O novo competitivo do Ultimate Team</li>
+        </ol>
+      </details>
+      <details class="nivel">
+        <summary><span class="nivel__n">01</span><span class="nivel__t">Pré-jogo</span><span class="nivel__c">5 aulas</span><svg class="nivel__i" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <ol class="aulas">
+          <li><b>01</b>Seja bem-vindo</li>
+          <li><b>02</b>Mentalidade de um campeão</li>
+          <li><b>03</b>Configurações que fazem diferença</li>
+          <li><b>04</b>Aprenda a montar seu time do jeito certo</li>
+          <li><b>05</b>Táticas personalizadas sem complicação</li>
+        </ol>
+      </details>
+      <details class="nivel nivel--key" open>
+        <summary><span class="nivel__n">02</span><span class="nivel__t">Sem a bola</span><span class="nivel__c">4 aulas</span><svg class="nivel__i" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p class="nivel__flag">O nível mais importante do curso. No FC 27 a IA não rouba mais a bola por você.</p>
+        <ol class="aulas">
+          <li><b>06</b>Marcação: posicionamento antes do desarme</li>
+          <li><b>07</b>Pressionar ou recuar? Escolhendo o momento</li>
+          <li><b>08</b>Protegendo a área contra cruzamento e chute de fora</li>
+          <li><b>09</b>Os erros defensivos que viram gol</li>
+        </ol>
+      </details>
+      <details class="nivel">
+        <summary><span class="nivel__n">03</span><span class="nivel__t">Com a bola</span><span class="nivel__c">6 aulas</span><svg class="nivel__i" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <ol class="aulas">
+          <li><b>10</b>Construção de jogadas</li>
+          <li><b>11</b>Quando é o momento certo de driblar</li>
+          <li><b>12</b>Player Lock</li>
+          <li><b>13</b>Tabelas, triangulações e movimentação</li>
+          <li><b>14</b>Finalização de jogadas</li>
+          <li><b>15</b>Finalização: o chute em si</li>
+        </ol>
+      </details>
+      <details class="nivel">
+        <summary><span class="nivel__n">04</span><span class="nivel__t">Momentos decisivos</span><span class="nivel__c">3 aulas</span><svg class="nivel__i" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <ol class="aulas">
+          <li><b>16</b>Transição: atacar e defender em segundos</li>
+          <li><b>17</b>Administrando o resultado</li>
+          <li><b>18</b>Prorrogação e pênaltis sem desespero</li>
+        </ol>
+      </details>
+      <details class="nivel">
+        <summary><span class="nivel__n">05</span><span class="nivel__t">Alta performance</span><span class="nivel__c">4 aulas</span><svg class="nivel__i" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <ol class="aulas">
+          <li><b>19</b>Os erros que mais te prejudicam e você não percebe</li>
+          <li><b>20</b>Aprenda a analisar e corrigir seus erros</li>
+          <li><b>21</b>Como treinar do jeito certo e eficiente</li>
+          <li><b>22</b>Plano de evolução</li>
+        </ol>
+      </details>
+      <details class="nivel">
+        <summary><span class="nivel__n">+</span><span class="nivel__t">Extras e ferramentas</span><span class="nivel__c">2 extras + plano</span><svg class="nivel__i" aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <ol class="aulas">
+          <li><b>★</b>Torne-se o terror da Weekend League</li>
+          <li><b>★</b>Rivals sem estresse</li>
+          <li><b>＋</b>Plano de 4 semanas + diário de partidas</li>
+        </ol>
+      </details>
+      <div class="cta">
+        <a class="btn btn--lg js-cta" href="#oferta">Quero as 22 aulas</a>
+        <p class="micro">Acesso imediato · Garantia de <mark class="fill">[PREENCHER: dias]</mark> dias</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANO DE 4 SEMANAS -->
+<section class="sec sec--light sec--plano" aria-labelledby="plano-title">
+  <div class="wrap">
+    <div class="sec__head sec__head--c">
+      <h2 class="h2" id="plano-title" data-letters>4 semanas pra <span class="hl">parar de depender da IA</span></h2>
+      <p class="lead">Um foco por semana, com meta que dá pra medir. Quem tenta corrigir tudo de uma vez não corrige nada.</p>
+    </div>
+    <div class="plano-wrap">
+      <div class="plano__bar" aria-hidden="true"><i></i></div>
+      <ol class="plano">
+        <li class="semana">
+          <div class="semana__head"><span class="semana__n">Semana 1</span><h3>Defesa manual</h3></div>
+          <span class="semana__dot" aria-hidden="true"></span>
+          <div class="semana__card"><p>Aulas 03, 06, 07 e 09. Ajuste as configurações e faça 10 min por dia de jockey + bote em pé.</p><p class="meta"><span>Meta</span>Menos de 1,5 gol sofrido por jogo no Rivals</p></div>
+        </li>
+        <li class="semana">
+          <div class="semana__head"><span class="semana__n">Semana 2</span><h3>Construção</h3></div>
+          <span class="semana__dot" aria-hidden="true"></span>
+          <div class="semana__card"><p>Aulas 10, 12 e 13. Trocar de lado antes de atacar, testar corrida curva e Player Lock no Squad Battles.</p><p class="meta"><span>Meta</span>4 ou mais chances claras por jogo</p></div>
+        </li>
+        <li class="semana">
+          <div class="semana__head"><span class="semana__n">Semana 3</span><h3>Finalização e bola parada</h3></div>
+          <span class="semana__dot" aria-hidden="true"></span>
+          <div class="semana__card"><p>Aulas 08, 14 e 15. 40 chutes no treino por dia e 2 jogadas de escanteio com Evasão.</p><p class="meta"><span>Meta</span>Converter 1 em cada 3 chances claras</p></div>
+        </li>
+        <li class="semana">
+          <div class="semana__head"><span class="semana__n">Semana 4</span><h3>Simulação de WL</h3></div>
+          <span class="semana__dot" aria-hidden="true"></span>
+          <div class="semana__card"><p>Aulas 02, 16, 17 e 18 + Extras. Campanha do Champions em blocos, com as regras do terror.</p><p class="meta"><span>Meta</span>Bater a faixa de vitórias que você definiu</p></div>
+        </li>
+      </ol>
+    </div>
+    <div class="cta cta--c">
+      <a class="btn btn--lg js-cta" href="#oferta">Começar o plano de 4 semanas</a>
+      <p class="micro">Acesso imediato · Garantia de <mark class="fill">[PREENCHER: dias]</mark> dias</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUEM JOGA COM O ILLAN -->
+<section class="sec" id="alunos" aria-labelledby="alunos-title">
+  <div class="wrap">
+    <div class="sec__head sec__head--c">
+      <h2 class="h2" id="alunos-title" data-letters>Quem joga <span class="hl">com o Illan</span></h2>
+      <p class="lead">Jogadores acompanhados de perto pelo Illan.</p>
+    </div>
+    <ul class="fut" id="fut-grid"><!-- preenchido pelo array players em js/main.js --></ul>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="sec sec--light sec--deps" id="depoimentos" aria-labelledby="dep-title">
+  <div class="wrap">
+    <div class="sec__head sec__head--c">
+      <h2 class="h2" id="dep-title" data-letters>Aluno de verdade. <span class="hl">Print de verdade.</span></h2>
+      <p class="lead">Conversas reais do WhatsApp do Illan, sem edição de texto. Toque num print pra ver inteiro.</p>
+    </div>
+    <div class="deps-nav">
+      <button class="icon-btn" type="button" data-scroll="deps" data-dir="-1" aria-label="Prints anteriores"><svg aria-hidden="true"><use href="#i-prev"/></svg></button>
+      <button class="icon-btn" type="button" data-scroll="deps" data-dir="1" aria-label="Próximos prints"><svg aria-hidden="true"><use href="#i-next"/></svg></button>
+    </div>
+    <ul class="deps" id="deps"><!-- preenchido em js/main.js --></ul>
+    <div class="cta cta--c">
+      <a class="btn btn--lg js-cta" href="#oferta">Quero ser o próximo print</a>
+      <p class="micro">Acesso imediato · Pagamento seguro</p>
+    </div>
+  </div>
+  <div class="marquee" aria-label="Comentários no post do título">
+    <button class="icon-btn marquee__toggle" type="button" aria-pressed="false" aria-label="Pausar comentários"><svg aria-hidden="true"><use href="#i-pause"/></svg></button>
+    <div class="marquee__track">
+      <ul class="marquee__list">
+        <li><b>phzinchaves</b> Brabos demais, parabéns rapaziada!</li>
+        <li><b>coach_rafa10</b> Parabéns ao coach e player, a dupla jogou mt</li>
+        <li><b>ze_rafael04</b> Parabéns irmão, vcs merecem</li>
+        <li><b>caiofleischmann</b> Aeeeee</li>
+        <li><b>nomercy54_</b> Parabéns mano!</li>
+      </ul>
+      <ul class="marquee__list" aria-hidden="true">
+        <li><b>phzinchaves</b> Brabos demais, parabéns rapaziada!</li>
+        <li><b>coach_rafa10</b> Parabéns ao coach e player, a dupla jogou mt</li>
+        <li><b>ze_rafael04</b> Parabéns irmão, vcs merecem</li>
+        <li><b>caiofleischmann</b> Aeeeee</li>
+        <li><b>nomercy54_</b> Parabéns mano!</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- OFERTA -->
+<section class="sec sec--oferta" id="oferta" aria-labelledby="oferta-title">
+  <div class="beams beams--soft" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap">
+    <div class="oferta">
+      <p class="tag tag--c"><span class="tag__pill">Oferta</span><span class="tag__txt">acesso completo</span></p>
+      <h2 class="oferta__title" id="oferta-title" data-letters>Illan <span class="hl">Evolution</span></h2>
+      <p class="oferta__sub">O curso completo de EA FC 27 do Coach Illan</p>
+      <ul class="checks oferta__checks">
+        <li>22 aulas em 5 níveis + 3 capítulos sobre o FC 27</li>
+        <li>Extras: Weekend League e Rivals sem estresse</li>
+        <li>Plano de 4 semanas, diário de partidas e checklist</li>
+        <li>Guia oficial do aluno em PDF</li>
+        <li>Acesso por <mark class="fill">[PREENCHER: tempo de acesso]</mark></li>
+      </ul>
+      <div class="preco">
+        <p class="preco__de">de <s><mark class="fill">[PREENCHER: R$ X]</mark></s> por</p>
+        <p class="preco__por"><mark class="fill">[PREENCHER: R$ Y]</mark></p>
+        <p class="preco__parc">ou <mark class="fill">[PREENCHER: 12x de R$ ...]</mark></p>
+      </div>
+      <a class="btn btn--xl js-cta" href="#oferta">Entrar no Illan Evolution</a>
+      <ul class="selos">
+        <li><svg aria-hidden="true"><use href="#i-lock"/></svg>Pagamento seguro</li>
+        <li><svg aria-hidden="true"><use href="#i-bolt"/></svg>Acesso imediato</li>
+      </ul>
+      <div class="garantia">
+        <svg aria-hidden="true"><use href="#i-shield"/></svg>
+        <div>
+          <h3>Garantia de <mark class="fill">[PREENCHER: dias]</mark> dias</h3>
+          <p>Entrou, assistiu e achou que não é pra você? Pede o reembolso dentro do prazo e recebe o valor de volta. <mark class="fill">[PREENCHER: confirmar regra da garantia]</mark></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec sec--light" id="faq" aria-labelledby="faq-title">
+  <div class="wrap faq-wrap">
+    <h2 class="h2 h2--c" id="faq-title" data-letters>Perguntas de <span class="hl">quem joga</span></h2>
+    <div class="faq">
+      <details>
+        <summary>Serve pra quem é Div 8?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Serve. O método começa pelo básico: configuração, elenco e defesa manual. E no FC 27 o acesso ao Champions não pede divisão mínima. Você soma Pontos de Qualificação no Rivals ou no Squad Battles. Quem está embaixo é quem mais ganha arrumando a defesa.</p>
+      </details>
+      <details>
+        <summary>Preciso de time caro?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Não. No FC 27 os PlayStyles perderam força e os atributos voltaram a mandar. A Aula 04 ensina a montar o time pelo seu jeito de jogar, com química e atributo certo, e não pelo overall.</p>
+      </details>
+      <details>
+        <summary>Funciona no PS5, Xbox e PC?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Funciona. O método é o mesmo nas três plataformas e os comandos aparecem nos dois padrões (L1/LB, R1/RB). No PC, vale pra quem joga com controle.</p>
+      </details>
+      <details>
+        <summary>Quanto tempo por dia eu preciso?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Dá pra treinar com 15 minutos de aquecimento offline antes do ranqueado, mais 10 minutos de defesa manual na primeira semana. O curso pede sessões curtas, em blocos de 3 a 5 partidas, e não maratona.</p>
+      </details>
+      <details>
+        <summary>E se a EA mudar o jogo?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>A EA disse que não fará grandes mudanças de balanceamento logo após o lançamento, pra dar tempo de os jogadores aprenderem as mecânicas novas. E boa parte do método não depende de patch: posicionamento, controle do tilt, revisão de derrota e planejamento de WL.</p>
+      </details>
+      <details>
+        <summary>Tem boost ou compra de moedas?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Não, nunca. Nada de boost, compartilhamento de conta ou compra de moedas. Aqui quem sobe é você, jogando melhor.</p>
+      </details>
+      <details>
+        <summary>Como eu recebo o acesso?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p><mark class="fill">[PREENCHER: plataforma e formato de entrega das aulas]</mark></p>
+      </details>
+      <details>
+        <summary>E se eu não gostar?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary>
+        <p>Você tem <mark class="fill">[PREENCHER: dias]</mark> dias de garantia. Pede o reembolso dentro do prazo e recebe o valor de volta.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FAIXA FINAL -->
+<section class="final" aria-labelledby="final-title">
+  <div class="wrap final__in">
+    <h2 class="final__title" id="final-title" data-letters>A IA saiu da defesa. <span>Agora entra você.</span></h2>
+    <div class="final__side">
+      <p>Acesso imediato, plano de 4 semanas e garantia de <mark class="fill">[PREENCHER: dias]</mark> dias.</p>
+      <a class="btn btn--white btn--lg js-cta" href="#oferta">Quero defender no manual</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__in">
+    <a class="logo" href="#topo" aria-label="Illan Evolution, voltar ao topo"><span class="logo__a">Illan</span><span class="logo__b">Evolution</span></a>
+    <ul class="footer__links">
+      <li><a href="https://www.instagram.com/coach__illan/" rel="noopener" target="_blank">Instagram @coach__illan</a></li>
+      <li><a href="https://linktr.ee/CoachEAFC" rel="noopener" target="_blank">linktr.ee/CoachEAFC</a></li>
+    </ul>
+    <p class="legal">EA SPORTS FC é marca registrada da Electronic Arts Inc. Este curso é independente e não possui afiliação, patrocínio ou endosso da Electronic Arts.</p>
+    <p class="legal">© <span id="ano">2026</span> Illan Evolution · Coach Illan</p>
+  </div>
+</footer>
+
+<!-- CTA flutuante no mobile -->
+<div class="dock" id="dock" aria-hidden="true">
+  <a class="btn btn--lg js-cta" href="#oferta" tabindex="-1">Entrar no Illan Evolution</a>
+</div>
+
+<!-- Lightbox dos prints -->
+<dialog class="lightbox" id="lightbox" aria-label="Print do depoimento">
+  <button class="icon-btn lightbox__close" type="button" aria-label="Fechar"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+  <button class="icon-btn lightbox__prev" type="button" aria-label="Print anterior"><svg aria-hidden="true"><use href="#i-prev"/></svg></button>
+  <figure>
+    <img id="lightbox-img" src="data:," alt="">
+    <figcaption id="lightbox-cap"></figcaption>
+  </figure>
+  <button class="icon-btn lightbox__next" type="button" aria-label="Próximo print"><svg aria-hidden="true"><use href="#i-next"/></svg></button>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js" defer></script>
+<script src="js/main.js?v=12" defer></script>
+</body>
+</html>
