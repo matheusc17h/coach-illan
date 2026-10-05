@@ -13,7 +13,8 @@ const players = [
     titulos: ['Campeão Sul-Americano (EA FC 26)', 'Top 2 e-Libertadores (PY)', 'Top 2 Qualify 3'] },
   { foto: 'assets/jogadores/jogador-2.webp', retrato: true, nick: '@toniotti28',
     titulos: ['Pro player profissional de EA FC', 'Top 3 SA Qualify 2 (FIFA 23)', '#14 no ranking FIFA.gg SA (FIFA 23)'] },
-  { foto: '', nick: '[PREENCHER: @jogador 3]', titulos: ['[PREENCHER: títulos]'] },
+  { foto: '', nick: '@ze_rafael04', nome: 'Zé Rafael',
+    titulos: ['Jogador profissional de EA FC', 'Top 17 e-Libertadores 26 (BR)', 'Top 17 e-Nations (BR)', 'Campeão nacional Phygital 2025'] },
 ];
 
 // Prints reais dos alunos. "hook" é um trecho copiado do próprio print, com a grafia original.
