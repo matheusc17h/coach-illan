@@ -349,9 +349,9 @@ addEventListener('DOMContentLoaded', () => {
     }
 
     /* hero: o Illan sobe mais devagar que a página */
-    gsap.to('.hero__img', { yPercent: desk ? 10 : 6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-    // no celular os cards ficam numa linha abaixo da foto: sem parallax, pra não subirem sobre a figura
+    // no celular os cards ficam numa linha abaixo da foto: sem parallax na foto nem nos cards, senão eles se encostam
     if (side) {
+      gsap.to('.hero__img', { yPercent: desk ? 10 : 6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
       gsap.to('.float--a', { y: -60, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
       gsap.to('.float--b', { y: -110, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
     }
