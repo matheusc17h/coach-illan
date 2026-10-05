@@ -7,11 +7,12 @@ const CHECKOUT_URL = ''; // [PREENCHER: URL do checkout]
 
 // Jogadores de campeonato que já tiveram o Illan como coach. Troque foto e texto só aqui.
 // foto: PNG/WebP com fundo transparente dentro de site/ (ex.: 'assets/jogadores/nick.webp'). Vazio = silhueta.
-// pos: posição horizontal do recorte da foto (0% = esquerda). titulos: um por linha.
+// pos: posição horizontal do recorte da foto (0% = esquerda). retrato: true pra foto em pé (mostra da cabeça ao peito). titulos: um por linha.
 const players = [
   { foto: 'assets/jogadores/mhenrique7.webp', pos: '18%', nick: '@mhenrique7_', nome: 'Matheus Henrique',
     titulos: ['Campeão Sul-Americano (EA FC 26)', 'Top 2 e-Libertadores (PY)', 'Top 2 Qualify 3'] },
-  { foto: '', nick: '[PREENCHER: @jogador 2]', titulos: ['[PREENCHER: títulos]'] },
+  { foto: 'assets/jogadores/jogador-2.webp', retrato: true, nick: '[PREENCHER: @jogador 2]',
+    titulos: ['Pro player profissional de EA FC', 'Top 3 SA Qualify 2 (FIFA 23)', '#14 no ranking FIFA.gg SA (FIFA 23)'] },
   { foto: '', nick: '[PREENCHER: @jogador 3]', titulos: ['[PREENCHER: títulos]'] },
 ];
 
@@ -78,7 +79,7 @@ $('#ano').textContent = new Date().getFullYear();
       <article class="fut-card" tabindex="0" aria-label="${p.nick}${p.nome ? ` (${p.nome})` : ''}, já teve o Illan como coach. ${p.titulos.join('. ')}">
         <div class="fut-card__media">
           ${p.foto
-            ? `<img class="fut-card__img" src="${p.foto}" alt="" loading="lazy" decoding="async" style="--pos:${p.pos || '50%'}">`
+            ? `<img class="fut-card__img${p.retrato ? ' fut-card__img--retrato' : ''}" src="${p.foto}" alt="" loading="lazy" decoding="async" style="--pos:${p.pos || '50%'}">`
             : `<span class="fut-card__ph">${silhouette}</span>`}
         </div>
         <div class="fut-card__body">
