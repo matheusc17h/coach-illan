@@ -18,6 +18,14 @@
   --grad:    linear-gradient(90deg, #d4136f 0%, #e8200f 100%);          /* botões (texto branco ≥ 4.6:1) */
   --grad-tx: linear-gradient(90deg, #ff4f86 0%, #ff4a2e 100%);          /* destaque em texto */
   --glow:    0 0 0 1px rgba(255,48,72,.18), 0 18px 60px -12px rgba(255,30,50,.35);
+  /* papéis fora da paleta principal: cada um vem de um objeto real do mundo do Illan */
+  --focus:      #ff6b7a;                                   /* anel de foco do teclado */
+  --trophy:     linear-gradient(135deg, #f6d27a, #c98d1c); /* só troféu e selo de campeão */
+  --trophy-ink: #2a1a00;
+  --wa-bubble:  #202c33;   /* balão recebido do WhatsApp (os depoimentos são prints de lá) */
+  --wa-online:  #25d366;
+  --phone:      #0b0b0c;   /* moldura de celular dos prints */
+  --todo:       #ffe14d;   /* [PREENCHER]: amarelo de propósito, pra ninguém publicar sem ver */
 
   --f-title: "Outfit", "Segoe UI", system-ui, sans-serif;
   --f-body:  "Manrope", "Segoe UI", system-ui, sans-serif;
@@ -52,14 +60,14 @@ a{ color:inherit; }
 h1,h2,h3,p,ul,ol,figure,blockquote{ margin:0; }
 ul,ol{ padding:0; list-style:none; }
 button{ font:inherit; color:inherit; }
-:focus-visible{ outline:2px solid #ff6b7a; outline-offset:3px; border-radius:6px; }
+:focus-visible{ outline:2px solid var(--focus); outline-offset:3px; border-radius:6px; }
 
 .sr{ position:absolute!important; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 .skip{ position:absolute; left:16px; top:-100px; z-index:200; background:#fff; color:#000; padding:12px 16px; border-radius:8px; font-weight:700; }
 .skip:focus{ top:12px; }
 
 /* conteúdo que falta: bem visível de propósito */
-mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; font-weight:700; font-family:var(--f-body); font-size:.82em; letter-spacing:0; -webkit-text-fill-color:#000; }
+mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px; font-weight:700; font-family:var(--f-body); font-size:.82em; letter-spacing:0; -webkit-text-fill-color:#000; }
 
 .wrap{ width:min(100% - var(--gutter) * 2, 1200px); margin-inline:auto; }
 
@@ -70,7 +78,7 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 }
 .h2{
   font-family:var(--f-title); font-weight:800;
-  font-size:clamp(1.85rem, 1.2rem + 2.6vw, 3rem);
+  font-size:clamp(2rem, 1.1rem + 3.4vw, 3.5rem); /* 56px no desktop = 3,3x o corpo de 17px */
   line-height:1.08; letter-spacing:-.02em; text-wrap:balance;
 }
 .h2--c{ text-align:center; }
@@ -188,7 +196,7 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
    ========================================================= */
 .hero{ position:relative; overflow:hidden; padding-top:calc(var(--header-h) + 24px); background:var(--bg); }
 /* fundo em vídeo: poster como base (reduced-motion e sem JS), vídeo por cima quando liga */
-.hero__bg{ position:absolute; inset:0; z-index:0; pointer-events:none; background:#060203 url(../assets/hero-bg-poster.jpg?v=2) center / cover no-repeat; }
+.hero__bg{ position:absolute; inset:0; z-index:0; pointer-events:none; background:var(--bg) url(../assets/hero-bg-poster.jpg?v=2) center / cover no-repeat; }
 .hero__video{ width:100%; height:100%; object-fit:cover; object-position:center; display:block; opacity:0; transition:opacity .8s ease; }
 .hero__video.is-on{ opacity:1; }
 /* overlay leve: só segura a leitura do texto e funde a base com a faixa seguinte */
@@ -245,10 +253,9 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 .float figcaption{ display:grid; gap:2px; }
 .float b{ font-size:.8125rem; }
 .float span{ color:var(--txt-2); }
-.float__ico{ flex:none; width:32px; height:32px; border-radius:9px; display:grid; place-items:center; background:var(--grad); }
-.float__ico svg{ width:18px; height:18px; color:#fff; }
-.float__ico--gold{ background:linear-gradient(135deg, #f6d27a, #c98d1c); }
-.float__ico--gold svg{ color:#2a1a00; }
+.float__ico{ flex:none; margin-top:1px; }  /* ícone solto, sem quadradinho: o card já é a moldura */
+.float__ico svg{ width:20px; height:20px; color:var(--red); }
+.float__ico--gold svg{ color:var(--gold); }
 .float--a{ left:0; top:12%; }
 .float--b{ right:0; bottom:8%; }
 
@@ -289,10 +296,12 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 .strip__in{ display:flex; flex-direction:column; gap:12px; padding:20px 0; }
 .strip p{ font-size:.9375rem; color:var(--txt-2); }
 .strip p b{ color:#fff; }
-.strip__stats{ display:flex; flex-wrap:wrap; gap:8px 20px; font-size:.875rem; color:var(--txt-2); }
-.strip__stats li{ display:flex; align-items:center; gap:6px; }
-.strip__stats li::before{ content:""; width:6px; height:6px; border-radius:50%; background:var(--red); box-shadow:0 0 8px var(--red); }
-.strip__stats b{ font-family:var(--f-title); font-weight:800; color:#fff; font-size:1.125rem; }
+/* números do curso no formato do placar da transmissão do FC: blocos retos colados,
+   número grande e legenda em caixa. Cantos vivos de propósito: placar de TV não tem canto redondo. */
+.strip__stats{ display:grid; grid-template-columns:repeat(2, 1fr); gap:1px; background:var(--line); border:1px solid var(--line); font-size:.75rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--txt-2); }
+.strip__stats li{ display:flex; align-items:baseline; gap:8px; padding:10px 14px; background:var(--bg); }
+.strip__stats b{ font-family:var(--f-title); font-weight:800; color:#fff; font-size:1.75rem; line-height:1; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+@media (min-width:600px){ .strip__stats{ grid-template-columns:repeat(4, auto); } }
 @media (min-width:900px){ .strip__in{ flex-direction:row; justify-content:space-between; align-items:center; } }
 
 /* =========================================================
@@ -311,18 +320,35 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 .pv__img{ aspect-ratio:4/4.2; background:radial-gradient(70% 65% at 50% 70%, rgba(255,36,52,.5), rgba(90,6,16,.4) 55%, #0d0305 85%); overflow:hidden; }
 .pv__img img{ width:100%; height:100%; object-fit:cover; object-position:50% 8%; }
 .pv__card p{ padding:20px 22px 24px; font-size:1rem; line-height:1.5; }
-@media (min-width:700px){ .pv{ grid-template-columns:repeat(3, 1fr); max-width:none; gap:16px; } .pv__card p{ font-size:.9375rem; padding:18px; } }
-@media (min-width:1000px){ .pv{ gap:28px; } .pv__card p{ font-size:1.0625rem; padding:22px 24px 26px; } }
+/* tablet/desktop: hierarquia em vez de 3 cards iguais. O tilt é a dor principal (é o CTA da página:
+   "quero parar de tiltar"), então ele ocupa a coluna grande; as outras duas dores ficam deitadas ao lado. */
+@media (min-width:700px){
+  .pv{ grid-template-columns:1.15fr 1fr; grid-template-rows:1fr 1fr; max-width:none; gap:16px; }
+  .pv__card:first-child{ grid-row:1 / span 2; display:flex; flex-direction:column; }
+  /* as fotos preenchem o espaço sem ditar a altura do card */
+  .pv__card .pv__img{ position:relative; }
+  .pv__card .pv__img img{ position:absolute; inset:0; }
+  .pv__card:first-child .pv__img{ flex:1; aspect-ratio:auto; min-height:300px; }
+  .pv__card:first-child p{ font-size:1.1875rem; font-weight:600; }
+  .pv__card:not(:first-child){ display:grid; grid-template-columns:42% minmax(0,1fr); align-items:center; border-radius:var(--r-md); }
+  .pv__card:not(:first-child) .pv__img{ aspect-ratio:auto; height:100%; min-height:230px; }
+  .pv__card p{ font-size:.9375rem; padding:18px; }
+}
+@media (min-width:1000px){
+  .pv{ gap:24px; }
+  .pv__card p{ font-size:1.0625rem; padding:22px 24px 26px; }
+  .pv__card:first-child p{ font-size:1.375rem; padding:26px 30px 30px; }
+}
 
 /* ---------- prova rápida ---------- */
 .quotes{ padding:8px 0 72px; }
 .quotes__list{ display:grid; gap:12px; }
 /* são mensagens de WhatsApp: balão recebido, com a pontinha no canto */
-.quotes__list li{ position:relative; padding:14px 18px 12px; border-radius:0 14px 14px 14px; background:#202c33; margin-left:8px; }
-.quotes__list li::before{ content:""; position:absolute; left:-8px; top:0; border-style:solid; border-width:0 8px 10px 0; border-color:transparent #202c33 transparent transparent; }
+.quotes__list li{ position:relative; padding:14px 18px 12px; border-radius:0 14px 14px 14px; background:var(--wa-bubble); margin-left:8px; }
+.quotes__list li::before{ content:""; position:absolute; left:-8px; top:0; border-style:solid; border-width:0 8px 10px 0; border-color:transparent var(--wa-bubble) transparent transparent; }
 .quotes__list p{ font-family:var(--f-title); font-weight:600; font-size:1.0625rem; line-height:1.35; }
 .quotes__list span{ display:block; margin-top:8px; font-size:.8125rem; color:var(--txt-2); text-align:right; }
-.quotes__list span::before{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%; background:#25d366; margin-right:8px; vertical-align:middle; }
+.quotes__list span::before{ content:""; display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--wa-online); margin-right:8px; vertical-align:middle; }
 .quotes__more{ margin-top:16px; text-align:center; }
 .quotes__more a{ display:inline-block; padding:12px 4px; color:var(--red); font-weight:700; text-underline-offset:4px; }
 @media (min-width:800px){ .quotes__list{ grid-template-columns:repeat(3, 1fr); gap:20px; align-items:start; } }
@@ -361,7 +387,7 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 .post{ position:absolute; right:0; bottom:0; width:48%; transform:rotate(-3deg); z-index:2; }
 .post img{ width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:var(--r-sm); box-shadow:0 24px 50px -10px rgba(0,0,0,.8); }
 .post figcaption{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; margin-top:10px; font-size:.75rem; color:var(--txt-2); }
-.post__selo{ background:linear-gradient(135deg, #f6d27a, #c98d1c); color:#2a1a00; font-weight:800; font-size:.75rem; padding:4px 10px; border-radius:999px; }
+.post__selo{ background:var(--trophy); color:var(--trophy-ink); font-weight:800; font-size:.75rem; padding:4px 10px; border-radius:999px; }
 .about__title{ font-family:var(--f-title); font-size:clamp(2.4rem, 1.6rem + 3.4vw, 4rem); line-height:1.02; letter-spacing:-.02em; }
 .about__hi{ display:block; font-weight:300; }
 .about__title .hl{ font-weight:800; }
@@ -425,7 +451,7 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 .nivel__c{ display:none; font-size:.8125rem; color:var(--txt-2); white-space:nowrap; }
 .nivel__i{ width:20px; height:20px; color:var(--txt-2); transition:transform .3s var(--ease); }
 .nivel[open] .nivel__i{ transform:rotate(45deg); color:#fff; }
-.nivel__flag{ margin:0 18px 12px; padding:10px 14px; border-radius:var(--r-sm); background:rgba(255,58,76,.12); font-size:.875rem; font-weight:600; }
+.nivel__flag{ margin:0 18px 12px; font-size:.875rem; font-weight:600; }
 .aulas{ padding:0 18px 16px; display:grid; }
 .aulas li{ display:flex; gap:14px; padding:10px 0; border-top:1px solid var(--line); font-size:.9375rem; line-height:1.4; }
 .aulas b{ min-width:26px; color:var(--red); font-family:var(--f-title); font-weight:800; }
@@ -519,6 +545,7 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
   background:radial-gradient(70% 70% at 50% 45%, rgba(255,36,52,.45), #120406 80%); border-bottom:1px solid var(--line-r); }
 .fut-card__img{ position:absolute; inset:auto 0 0; width:100%; height:92%; object-fit:cover; object-position:var(--pos) top; }
 .fut-card__img--retrato{ inset:8% auto auto 50%; width:auto; height:175%; transform:translateX(-50%); object-fit:contain; }
+.fut-card__img--inteira{ object-fit:contain; object-position:50% 100%; }
 .fut-card__ph{ position:absolute; inset:0; }
 .fut-card__ph svg{ position:absolute; left:50%; bottom:0; width:52%; transform:translateX(-50%); color:#050102; opacity:.9; }
 /* informações embaixo da foto */
@@ -543,13 +570,23 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
   scrollbar-width:thin; scrollbar-color:rgba(255,58,76,.5) transparent;
 }
 .deps > li{ scroll-snap-align:start; }
+/* destaques: as duas artes do Illan, grandes e lado a lado. As colunas seguem a proporção de cada
+   imagem (--ar = largura/altura), então as duas ficam com a mesma altura sem cortar nada. */
+.deps-top{ display:grid; gap:28px; max-width:420px; margin:0 auto 48px; }
+.deps-top .dep__hook{ font-size:1.25rem; }
+.deps-top .dep__phone{ padding:0; overflow:hidden; border-radius:var(--r-lg); }
+.deps-top .dep__phone img{ border-radius:0; }
+@media (min-width:768px){
+  .deps-top{ display:flex; max-width:980px; gap:32px; align-items:flex-end; }
+  .deps-top > li{ flex:var(--ar) 1 0; min-width:0; }
+}
 /* carrossel automático (celular): sem snap, senão o navegador briga com a rolagem contínua */
 .deps.is-auto{ scroll-snap-type:none; scroll-behavior:auto; }
 .dep{ display:block; width:100%; padding:0; border:0; background:none; text-align:left; cursor:zoom-in; border-radius:var(--r-md); }
 .dep__hook{ display:block; font-family:var(--f-title); font-weight:600; font-size:1.0625rem; line-height:1.3; margin-bottom:12px; text-wrap:balance; }
 .dep__hook::before{ content:"“"; color:var(--red); }
 .dep__hook::after{ content:"”"; color:var(--red); }
-.dep__phone{ display:block; padding:8px; border-radius:var(--r-md); background:#0b0b0c; border:1px solid var(--line); transition:transform .25s var(--ease); }
+.dep__phone{ display:block; padding:8px; border-radius:var(--r-md); background:var(--phone); border:1px solid var(--line); transition:transform .25s var(--ease); }
 .dep__phone img{ width:100%; height:auto; border-radius:10px; }
 .dep:hover .dep__phone{ transform:translateY(-3px); }
 @media (min-width:768px){
@@ -598,7 +635,8 @@ mark.fill{ background:#ffe14d; color:#000; padding:0 .3em; border-radius:4px; fo
 .selos{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px 22px; margin-top:18px; font-size:.8125rem; color:var(--txt-2); }
 .selos li{ display:flex; align-items:center; gap:7px; }
 .selos svg{ width:18px; height:18px; color:#fff; }
-.garantia{ display:flex; gap:14px; width:100%; text-align:left; margin-top:28px; padding:18px; border-radius:var(--r-md); background:rgba(255,255,255,.04); border:1px solid var(--line); }
+/* garantia: faz parte do card da oferta, separada só por uma linha (sem caixa dentro da caixa) */
+.garantia{ display:flex; gap:14px; width:100%; text-align:left; margin-top:28px; padding-top:24px; border-top:1px solid var(--line); }
 .garantia > svg{ flex:none; width:40px; height:40px; color:var(--gold); }
 .garantia h3{ font-family:var(--f-title); font-weight:800; font-size:1.125rem; margin-bottom:6px; }
 .garantia p{ font-size:.875rem; color:var(--txt-2); }

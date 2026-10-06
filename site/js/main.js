@@ -7,17 +7,18 @@ const CHECKOUT_URL = ''; // [PREENCHER: URL do checkout]
 
 // Jogadores de campeonato que já tiveram o Illan como coach. Troque foto e texto só aqui.
 // foto: PNG/WebP com fundo transparente dentro de site/ (ex.: 'assets/jogadores/nick.webp'). Vazio = silhueta.
-// pos: posição horizontal do recorte da foto (0% = esquerda). retrato: true pra foto em pé (mostra da cabeça ao peito). titulos: um por linha.
+// pos: posição horizontal do recorte da foto (0% = esquerda). retrato: true pra foto em pé (mostra da cabeça ao peito). inteira: true pra foto pequena de meio corpo (aparece inteira, sem zoom). titulos: um por linha.
 const players = [
   { foto: 'assets/jogadores/mhenrique7.webp', pos: '18%', nick: '@mhenrique7_', nome: 'Matheus Henrique',
     titulos: ['Campeão Sul-Americano (EA FC 26)', 'Top 2 e-Libertadores (PY)', 'Top 2 Qualify 3'] },
   { foto: 'assets/jogadores/jogador-2.webp', retrato: true, nick: '@toniotti28',
     titulos: ['Pro player profissional de EA FC', 'Top 3 SA Qualify 2 (FIFA 23)', '#14 no ranking FIFA.gg SA (FIFA 23)'] },
-  { foto: '', nick: '@ze_rafael04', nome: 'Zé Rafael',
+  { foto: 'assets/jogadores/ze-rafael.webp', inteira: true, nick: '@ze_rafael04', nome: 'Zé Rafael',
     titulos: ['Jogador profissional de EA FC', 'Top 17 e-Libertadores 26 (BR)', 'Top 17 e-Nations (BR)', 'Campeão nacional Phygital 2025'] },
 ];
 
 // Prints reais dos alunos. "hook" é um trecho copiado do próprio print, com a grafia original.
+// destaque: true = arte do Illan com vários prints, mostrada grande no topo da seção (e primeira no lightbox).
 const depoimentos = [
   { img: 'dep-01', w: 328, h: 541, hook: 'Seu trabalho é muito foda', alt: 'Conversa de WhatsApp. O aluno escreve: "Seu trabalho é muito foda", "Fácil de entender", "Quero ficar bom nesse joguinho".' },
   { img: 'dep-06', w: 329, h: 507, hook: 'Tava marcando igual uma porta', alt: 'Conversa de WhatsApp. O aluno escreve: "Tava marcando igual uma porta, agora tomo 1 gol max por partida, melhorei bastante nisso" e "parece até outra pessoa, principalmente a defesa".' },
@@ -29,8 +30,8 @@ const depoimentos = [
   { img: 'dep-02', w: 335, h: 450, hook: 'Tô batendo em vários', alt: 'Conversa de WhatsApp com print de vitória por 3 a 1. O aluno escreve: "Caralho illan tu é muito foda" e "Tô batendo em vários".' },
   { img: 'dep-09', w: 309, h: 479, hook: 'Marcação fechadinha', alt: 'Conversa de WhatsApp com vídeo de partida. O aluno escreve: "To sentindo a marcação mais encima", "To quase na Elite dnv" e "Marcação fechadinha, valeu msm man".' },
   { img: 'dep-04', w: 342, h: 354, hook: 'Sem suas dicas n ia avançar nesse jogo nunca', alt: 'Conversa de WhatsApp. O aluno escreve: "Valeu mano", "Sem suas dicas n ia avançar nesse jogo nunca", "Valeu demais mesmo".' },
-  { img: 'dep-11', w: 720, h: 1280, hook: 'Melhorei muito parece até outra pessoa', alt: 'Arte do Illan com três prints de alunos: subida da 2ª divisão para a Elite, agradecimento pelas aulas e "tava marcando igual uma porta, agora tomo 1 gol max por partida".' },
-  { img: 'dep-12', w: 900, h: 1125, hook: 'Pô teu coach é brabo!', alt: 'Arte "Feedback dos meus alunos" com três prints: subida da div 2 pra elite, "suas aulas mudaram minha forma de enxergar o jogo" e "depois dessas suas dicas é difícil eu perde uma bola".' },
+  { img: 'dep-11', destaque: true, w: 720, h: 1280, hook: 'Melhorei muito parece até outra pessoa', alt: 'Arte do Illan com três prints de alunos: subida da 2ª divisão para a Elite, agradecimento pelas aulas e "tava marcando igual uma porta, agora tomo 1 gol max por partida".' },
+  { img: 'dep-12', destaque: true, w: 900, h: 1125, hook: 'Pô teu coach é brabo!', alt: 'Arte "Feedback dos meus alunos" com três prints: subida da div 2 pra elite, "suas aulas mudaram minha forma de enxergar o jogo" e "depois dessas suas dicas é difícil eu perde uma bola".' },
 ];
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -80,7 +81,7 @@ $('#ano').textContent = new Date().getFullYear();
       <article class="fut-card" tabindex="0" aria-label="${p.nick}${p.nome ? ` (${p.nome})` : ''}, já teve o Illan como coach. ${p.titulos.join('. ')}">
         <div class="fut-card__media">
           ${p.foto
-            ? `<img class="fut-card__img${p.retrato ? ' fut-card__img--retrato' : ''}" src="${p.foto}" alt="" loading="lazy" decoding="async" style="--pos:${p.pos || '50%'}">`
+            ? `<img class="fut-card__img${p.retrato ? ' fut-card__img--retrato' : ''}${p.inteira ? ' fut-card__img--inteira' : ''}" src="${p.foto}" alt="" loading="lazy" decoding="async" style="--pos:${p.pos || '50%'}">`
             : `<span class="fut-card__ph">${silhouette}</span>`}
         </div>
         <div class="fut-card__body">
@@ -115,14 +116,18 @@ $('#ano').textContent = new Date().getFullYear();
 
 /* ---------- depoimentos + lightbox ---------- */
 {
+  // destaques primeiro: assim a ordem do lightbox é a mesma da tela
+  depoimentos.sort((a, b) => !!b.destaque - !!a.destaque);
   const list = $('#deps');
-  list.innerHTML = depoimentos.map((d, i) => `
-    <li>
-      <button class="dep" type="button" data-i="${i}" aria-label="Ampliar print: ${d.hook}">
+  const card = (d, i) => `
+    <li${d.destaque ? ` style="--ar:${d.w / d.h}"` : ''}>
+      <button class="dep${d.destaque ? ' dep--top' : ''}" type="button" data-i="${i}" aria-label="Ampliar print: ${d.hook}">
         <span class="dep__hook">${d.hook}</span>
         <span class="dep__phone"><img src="assets/depoimentos/${d.img}.webp" width="${d.w}" height="${d.h}" alt="${d.alt.replace(/"/g, '&quot;')}" loading="lazy" decoding="async"></span>
       </button>
-    </li>`).join('');
+    </li>`;
+  $('#deps-top').innerHTML = depoimentos.map((d, i) => (d.destaque ? card(d, i) : '')).join('');
+  list.innerHTML = depoimentos.map((d, i) => (d.destaque ? '' : card(d, i))).join('');
 
   /* Carrossel perpétuo no celular: roda devagar sozinho, para com o dedo em cima
      (ou com o lightbox aberto) e volta a rodar quando a pessoa solta.
@@ -204,7 +209,7 @@ $('#ano').textContent = new Date().getFullYear();
     img.alt = d.alt;
     cap.textContent = `Print ${cur + 1} de ${depoimentos.length}`;
   };
-  list.addEventListener('click', e => {
+  $('#depoimentos').addEventListener('click', e => {
     const b = e.target.closest('.dep');
     if (!b) return;
     show(+b.dataset.i);
@@ -275,8 +280,8 @@ $('#ano').textContent = new Date().getFullYear();
 
 /* =========================================================
    Movimento (GSAP + ScrollTrigger)
-   Cada animação responde ao scroll e tem função: entrada do hero,
-   cards que chegam em sequência, progresso do plano, carta que vira.
+   Um momento orquestrado (a entrada do hero) e, no resto, só movimento com função:
+   progresso do plano, carta de FUT que vira, post do título caindo na foto.
    Sem GSAP ou com movimento reduzido, a página fica estática e completa.
    ========================================================= */
 addEventListener('DOMContentLoaded', () => {
@@ -288,7 +293,6 @@ addEventListener('DOMContentLoaded', () => {
   mm.add({ motion: '(prefers-reduced-motion: no-preference)', desk: '(min-width: 960px)', side: '(min-width: 800px)' }, ctx => {
     const { motion, desk, side } = ctx.conditions;
     if (!motion) return;
-    const up = { opacity: 0, y: 48 };
     const reveal = (targets, from, opts = {}) => ScrollTrigger.batch(targets, {
       start: 'top 88%', once: true,
       onEnter: els => gsap.fromTo(els, from, { opacity: 1, y: 0, x: 0, scale: 1, rotate: 0, rotateY: 0, duration: .8, ease: 'power3.out', stagger: .12, overwrite: true, ...opts }),
@@ -363,35 +367,15 @@ addEventListener('DOMContentLoaded', () => {
         scrollTrigger: { trigger: '.strip', start: 'top 92%', once: true } });
     });
 
-    /* títulos de seção */
-    // títulos com data-letters ganham só a revelação de letras (mais abaixo)
-    const heads = '.sec .h2:not([data-letters]), .sec__head .lead, .about__title:not([data-letters])';
-    prep(heads, { opacity: 0, y: 32 });
-    reveal(heads, { opacity: 0, y: 32 });
+    /* Daqui pra baixo, nada de "sobe e aparece" genérico em todo bloco: o texto já está lá quando a
+       pessoa chega. Só fica o movimento que conta algo do mundo do Illan: o post do título caindo
+       sobre a foto, a capa do guia, a linha do tempo do plano e a carta de FUT virando. */
 
-    /* pra quem é: cards sobem em sequência; a foto faz parallax dentro do card */
-    prep('.pv__card', { opacity: 0, y: 80, rotate: (i) => (i - 1) * 2 });
-    reveal('.pv__card', { opacity: 0, y: 80, rotate: (i) => (i - 1) * 2 }, { stagger: .15, duration: .9 });
-    $$('.pv__img img').forEach(img => gsap.fromTo(img, { yPercent: -6, scale: 1.12 }, { yPercent: 6, scale: 1.12, ease: 'none',
-      scrollTrigger: { trigger: img.closest('.pv__card'), start: 'top bottom', end: 'bottom top', scrub: true } }));
-
-    /* o que mudou: 6 cards em cascata */
-    prep('.mudancas .card', up);
-    reveal('.mudancas .card', up, { stagger: .09 });
-
-    /* sobre: foto em parallax, troféus um a um, post gira com o scroll */
-    gsap.fromTo('.about__photo img', { yPercent: 6 }, { yPercent: -6, ease: 'none', scrollTrigger: { trigger: '.about__media', start: 'top bottom', end: 'bottom top', scrub: true } });
-    prep('.trofeus li, .quote', { opacity: 0, y: 24 });
-    reveal('.trofeus li, .quote', { opacity: 0, y: 24 }, { stagger: .1 });
-    prep('.quotes__list li', up);
-    reveal('.quotes__list li', up, { stagger: .12 });
-    // o post 'cai' sobre a foto conforme a colagem entra na tela
+    /* sobre: o post do título 'cai' sobre a foto conforme a colagem entra na tela */
     gsap.fromTo('.post', { rotate: 8, y: 80, x: 20 }, { rotate: -3, y: 0, x: 0, ease: 'none', scrollTrigger: { trigger: '.about__media', start: 'top 90%', end: 'center 55%', scrub: true } });
 
     /* aulas: capa entra com leve giro, níveis em cascata */
     gsap.from('.capa', { rotate: -6, y: 60, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.capa', start: 'top 85%', once: true } });
-    prep('.nivel, .produto .checks li', { opacity: 0, y: 28 });
-    reveal('.nivel, .produto .checks li', { opacity: 0, y: 28 }, { stagger: .07, duration: .6 });
 
     /* plano: linha do tempo. A linha enche com o scroll; o ponto de cada semana
        acende quando a ponta da linha chega nele (os dois usam a marca de 60% da tela). */
@@ -443,17 +427,9 @@ addEventListener('DOMContentLoaded', () => {
     prep('.fut > li', { opacity: 0, rotateY: -70, y: 30, transformPerspective: 900 });
     reveal('.fut > li', { opacity: 0, rotateY: -70, y: 30 }, { stagger: .1, duration: 1, ease: 'back.out(1.4)' });
 
-    /* depoimentos: prints sobem em sequência */
-    if (desk || matchMedia('(min-width: 768px)').matches) {
-      prep('.deps > li', { opacity: 0, y: 60 });
-      reveal('.deps > li', { opacity: 0, y: 60 }, { stagger: .08 });
-    }
-
     /* oferta: card cresce ao entrar, brilho aumenta */
     // só escala: o card da oferta nunca aparece apagado
     gsap.fromTo('.oferta', { scale: .93 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.oferta', start: 'top 95%', end: 'top 55%', scrub: true } });
-    prep('.oferta .checks li', { opacity: 0, x: -20 });
-    reveal('.oferta .checks li', { opacity: 0, x: -20 }, { stagger: .08, duration: .5 });
 
     /* faixa final: as duas linhas chegam de lados opostos */
     if ($('.final__title:not([data-letters])')) {

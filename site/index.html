@@ -6,14 +6,15 @@
 <title>Illan Evolution · Curso de EA FC 27 com o Coach Illan</title>
 <meta name="description" content="O FC 27 tirou a defesa da IA e passou pra sua mão. Aprenda a defender no manual, parar de tiltar na Weekend League e subir no Rivals com o método do Coach Illan, campeão sul-americano.">
 <meta name="theme-color" content="#060203">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%23d4136f'/%3E%3Cstop offset='1' stop-color='%23e8200f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Arial' font-weight='900' font-size='34' fill='%23fff' text-anchor='middle'%3EIE%3C/text%3E%3C/svg%3E">
+<!-- favicon: o "IE" da logo-caixa desenhado com retângulos (sem depender de fonte instalada) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%23d4136f'/%3E%3Cstop offset='1' stop-color='%23e8200f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='8' fill='url(%23g)'/%3E%3Cg fill='%23fff'%3E%3Crect x='12' y='15' width='8' height='34'/%3E%3Crect x='26' y='15' width='8' height='34'/%3E%3Crect x='26' y='15' width='26' height='8'/%3E%3Crect x='26' y='28' width='21' height='8'/%3E%3Crect x='26' y='41' width='26' height='8'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- fontes sem bloquear a primeira pintura -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap"></noscript>
 <link rel="preload" as="image" href="assets/illan-hero-pessoa-hd.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=15">
+<link rel="stylesheet" href="css/style.css?v=19">
 </head>
 <body>
 
@@ -390,6 +391,8 @@
       <h2 class="h2" id="dep-title" data-letters>Aluno de verdade. <span class="hl">Print de verdade.</span></h2>
       <p class="lead">Conversas reais do WhatsApp do Illan, sem edição de texto. Toque num print pra ver inteiro.</p>
     </div>
+    <!-- as duas artes do Illan com os prints dos alunos: o destaque da seção -->
+    <ul class="deps-top" id="deps-top"><!-- preenchido em js/main.js --></ul>
     <div class="deps-nav">
       <button class="icon-btn" type="button" data-scroll="deps" data-dir="-1" aria-label="Prints anteriores"><svg aria-hidden="true"><use href="#i-prev"/></svg></button>
       <button class="icon-btn" type="button" data-scroll="deps" data-dir="1" aria-label="Próximos prints"><svg aria-hidden="true"><use href="#i-next"/></svg></button>
@@ -441,6 +444,7 @@
         <p class="preco__por"><mark class="fill">[PREENCHER: R$ Y]</mark></p>
         <p class="preco__parc">ou <mark class="fill">[PREENCHER: 12x de R$ ...]</mark></p>
       </div>
+      <!-- CONFIRMAR COM O CLIENTE: enquanto CHECKOUT_URL (js/main.js) estiver vazio, este botão aponta pra própria seção -->
       <a class="btn btn--xl js-cta" href="#oferta">Entrar no Illan Evolution</a>
       <ul class="selos">
         <li><svg aria-hidden="true"><use href="#i-lock"/></svg>Pagamento seguro</li>
@@ -542,6 +546,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js" defer></script>
-<script src="js/main.js?v=12" defer></script>
+<script src="js/main.js?v=16" defer></script>
 </body>
 </html>
