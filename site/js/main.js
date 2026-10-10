@@ -116,161 +116,165 @@ $('#ano').textContent = new Date().getFullYear();
 
 /* ---------- depoimentos + lightbox ---------- */
 {
-  // destaques primeiro: assim a ordem do lightbox é a mesma da tela
+  // destaques (as artes do Illan) primeiro: são os primeiros cards do carrossel e do lightbox
   depoimentos.sort((a, b) => !!b.destaque - !!a.destaque);
-  const card = (d, i) => `
-    <li${d.destaque ? ` style="--ar:${d.w / d.h}"` : ''}>
-      <button class="dep${d.destaque ? ' dep--top' : ''}" type="button" data-i="${i}" aria-label="Ampliar print: ${d.hook}">
-        <span class="dep__hook">${d.hook}</span>
-        <span class="dep__phone"><img src="assets/depoimentos/${d.img}.webp" width="${d.w}" height="${d.h}" alt="${d.alt.replace(/"/g, '&quot;')}" loading="lazy" decoding="async"></span>
-      </button>
-    </li>`;
-  $('#deps-top').innerHTML = depoimentos.map((d, i) => (d.destaque ? card(d, i) : '')).join('');
-
+  const n = depoimentos.length;
   const box = $('#lightbox');
   const img = $('#lightbox-img');
   const cap = $('#lightbox-cap');
 
-  /* Parede de prints: DriftWall do React Bits portado pra JS puro. Colunas deslizam em sentidos
-     alternados num plano inclinado; a coluna sob o cursor (ou o dedo) para e o print levanta.
-     Clique abre o lightbox. Fora da tela ou com o lightbox aberto a animação dorme. */
-  const wall = $('#deps-wall');
-  const plane = $('.drift-wall__plane', wall);
-  const prints = depoimentos.map((d, i) => ({ ...d, i })).filter(d => !d.destaque);
+  /* Carrossel em profundidade: DepthCarousel do React Bits portado pra JS puro (GSAP já vem da CDN).
+     O print da frente fica inteiro; os seguintes recuam em fila pra direita, escurecendo e desfocando.
+     Arrastar, setas, pontos e teclado (← →) trocam o print; tocar no da frente abre o lightbox.
+     Roda sozinho e para com o mouse em cima, com foco dentro, fora da tela ou logo depois de mexer. */
+  const root = $('#deps-depth');
+  const stage = $('.depth__stage', root);
+  const hookEl = $('#deps-hook');
+  const dotsEl = $('#deps-dots');
   const wide = matchMedia('(min-width: 768px)');
-  const W = { tilt: 16, turn: -14, depth: 120, speed: 30, variance: .45, parallax: .6 };
-  const ptr = { x: 0, y: 0 }, damped = { x: 0, y: 0 };
-  let cols = [], tracks = [], offsets = [], vels = [], base = [], hoverCol = -1, active = null;
-  let raf = 0, last = 0, onScreen = false, touchTimer = 0;
-  const factor = c => 1 + W.variance * (((c * .6180339887 + .35) % 1) * 2 - 1);
-  const tile = (d, c, first) => `
-    <button class="drift-wall__tile dep" type="button" data-i="${d.i}" data-col="${c}"${first ? ` aria-label="Ampliar print: ${d.hook}"` : ' tabindex="-1" aria-hidden="true"'}>
-      <span class="drift-wall__inner">
-        <img src="assets/depoimentos/${d.img}.webp" width="${d.w}" height="${d.h}" alt="" loading="lazy" decoding="async" draggable="false">
-        <span class="drift-wall__overlay"></span>
-        <span class="dep__hook drift-wall__cap">${d.hook}</span>
-      </span>
-    </button>`;
-  const setPlane = () => {
-    plane.style.transform = `translate(-50%, -50%) scale(1.18) rotateX(${W.tilt + damped.y}deg) rotateY(${W.turn + damped.x}deg) translateZ(${-W.depth}px)`;
-  };
-  let built = '';
-  const build = () => {
-    const size = wide.matches ? { w: 180, h: 260, gap: 18 } : { w: 124, h: 180, gap: 12 };
-    // colunas suficientes pra cobrir a largura do plano inclinado; faltando print, repete
-    const n = Math.max(3, Math.ceil(wall.clientWidth / ((size.w + size.gap) * 1.18)) + 1);
-    const key = `${n}:${size.w}`;
-    if (key === built) return;
-    built = key;
-    wall.style.setProperty('--dw-tile-w', `${size.w}px`);
-    wall.style.setProperty('--dw-tile-h', `${size.h}px`);
-    wall.style.setProperty('--dw-gap', `${size.gap}px`);
-    const per = Math.max(2, Math.ceil(prints.length / n));
-    const wallH = wall.clientHeight || 600;
-    cols = Array.from({ length: n }, (_, c) => {
-      const g = Array.from({ length: per }, (_, j) => prints[(c * per + j) % prints.length]);
-      const copyH = g.length * (size.h + size.gap);
-      return { g, copyH, copies: Math.max(2, Math.ceil(wallH * 1.6 / copyH) + 1) };
+  const C = { depth: 220, tilt: 22, visible: 4, falloff: .2, blur: 6, duration: .7, delay: 3200 };
+  const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+  const wrapD = d => { d = ((d % n) + n) % n; return d > n / 2 ? d - n : d; };
+  stage.innerHTML = depoimentos.map((d, i) => `
+    <div class="depth__card" data-i="${i}" aria-roledescription="slide" aria-label="${i + 1} de ${n}">
+      <img src="assets/depoimentos/${d.img}.webp" width="${d.w}" height="${d.h}" alt="${d.alt.replace(/"/g, '&quot;')}" loading="${i < 4 ? 'eager' : 'lazy'}" decoding="async" draggable="false">
+      <span class="depth__tint"></span>
+    </div>`).join('');
+  dotsEl.innerHTML = depoimentos.map((d, i) => `<button class="depth__dot" type="button" role="tab" data-i="${i}" aria-label="Ver print ${i + 1}"></button>`).join('');
+  const cards = $$('.depth__card', stage);
+  const tints = $$('.depth__tint', stage);
+  const dots = $$('.depth__dot', dotsEl);
+  let pos = 0, focus = -1, scale = 1, tween = null, drag = null, dragged = false, wheelT = 0;
+  let hovered = false, focusedIn = false, onScreen = false, touchedAt = 0;
+  const spread = () => (wide.matches ? 90 : 46);
+  const stepPx = () => Math.max(cards[0].offsetWidth * .55 * scale, 40);
+
+  const layout = p => {
+    const sp = spread();
+    cards.forEach((el, i) => {
+      const d = wrapD(i - p);
+      const back = Math.max(0, d);
+      const shown = Math.abs(d) <= C.visible + .5;
+      const op = !shown ? 0 : d < 0 ? Math.max(0, 1 + d) : 1;
+      el.style.transform = `translate(-50%, -50%) scale(${scale}) translateX(${(sp * d).toFixed(2)}px) translateZ(${(-C.depth * d).toFixed(2)}px) rotateY(${(C.tilt * clamp(d, 0, 1)).toFixed(3)}deg)`;
+      el.style.opacity = op.toFixed(3);
+      el.style.filter = `brightness(${Math.max(.15, 1 - back * C.falloff).toFixed(3)}) blur(${Math.min(C.blur, back / C.visible * C.blur).toFixed(2)}px)`;
+      el.style.zIndex = String(Math.round(2000 - d * 20));
+      el.style.pointerEvents = shown && op > .05 ? 'auto' : 'none';
+      tints[i].style.opacity = clamp(back * C.falloff * 1.25, 0, .86).toFixed(3);
     });
-    // só a primeira aparição de cada print entra no Tab; as repetições são decorativas
-    const seen = new Set();
-    const html = cols.map((col, c) => `<div class="drift-wall__col"><div class="drift-wall__track">${
-      Array.from({ length: col.copies }, () => col.g.map(d => {
-        const first = !seen.has(d.i);
-        seen.add(d.i);
-        return tile(d, c, first);
-      }).join('')).join('')
-    }</div></div>`).join('');
-    plane.innerHTML = html;
-    tracks = $$('.drift-wall__track', plane);
-    offsets = cols.map((col, c) => col.copyH * ((c * .37) % 1));
-    vels = cols.map(() => 0);
-    base = cols.map((_, c) => W.speed * factor(c) * (c % 2 ? -1 : 1));
-    tracks.forEach((t, c) => { t.style.transform = `translate3d(0, ${-offsets[c]}px, 0)`; });
-    active = null; hoverCol = -1;
-    setPlane();
   };
-  const frame = t => {
-    const dt = last ? Math.min(.05, (t - last) / 1000) : 0;
-    last = t;
-    const k = 1 - Math.exp(-dt / .12);
-    damped.x += (ptr.x * W.parallax * 8 - damped.x) * k;
-    damped.y += (-ptr.y * W.parallax * 8 - damped.y) * k;
-    setPlane();
-    tracks.forEach((el, c) => {
-      const target = hoverCol === c ? 0 : base[c];
-      vels[c] += (target - vels[c]) * (1 - Math.exp(-dt / (target ? .28 : .16)));
-      const h = cols[c].copyH;
-      offsets[c] = (((offsets[c] + vels[c] * dt) % h) + h) % h;
-      el.style.transform = `translate3d(0, ${-offsets[c]}px, 0)`;
-    });
-    raf = requestAnimationFrame(frame);
+  const select = i => {
+    focus = i;
+    hookEl.textContent = depoimentos[i].hook;
+    dots.forEach((b, k) => b.setAttribute('aria-selected', String(k === i)));
+    cards.forEach((c, k) => c.setAttribute('aria-hidden', String(k !== i)));
   };
-  const run = () => {
-    cancelAnimationFrame(raf);
-    last = 0;
-    if (onScreen && !reduced.matches && !box.open) raf = requestAnimationFrame(frame);
+  const goTo = (raw, animate = true) => {
+    const idx = ((raw % n) + n) % n;
+    const target = pos + wrapD(idx - pos);
+    const settle = () => { pos = ((pos % n) + n) % n; layout(pos); };
+    if (tween) tween.kill();
+    if (!animate || reduced.matches || !window.gsap) { pos = target; settle(); }
+    else {
+      const proxy = { p: pos };
+      tween = gsap.to(proxy, { p: target, duration: C.duration, ease: 'power3.out', onUpdate: () => { pos = proxy.p; layout(pos); }, onComplete: settle });
+    }
+    if (idx !== focus) select(idx);
   };
-  const setActive = el => {
-    if (el === active) return;
-    if (active) active.classList.remove('is-active');
-    active = el;
-    if (el) el.classList.add('is-active');
-    hoverCol = el ? +el.dataset.col : -1;
-  };
-  const tileAt = e => document.elementFromPoint(e.clientX, e.clientY)?.closest('.drift-wall__tile');
-  wall.addEventListener('pointermove', e => {
-    if (e.pointerType !== 'mouse') return;
-    const r = wall.getBoundingClientRect();
-    ptr.x = (e.clientX - r.left) / r.width - .5;
-    ptr.y = (e.clientY - r.top) / r.height - .5;
-    const t = tileAt(e);
-    if (t) setActive(t);
+  const touch = () => { touchedAt = performance.now(); };
+
+  const openBox = i => { show(i); box.showModal(); };
+  stage.addEventListener('click', e => {
+    const c = e.target.closest('.depth__card');
+    if (!c || dragged) return;
+    const i = +c.dataset.i;
+    if (i === focus) openBox(i); else goTo(i);
   });
-  wall.addEventListener('pointerleave', e => {
-    if (e.pointerType !== 'mouse') return;
-    ptr.x = ptr.y = 0;
-    setActive(null);
+  $$('[data-depth]', root).forEach(b => b.addEventListener('click', () => { touch(); goTo(focus + +b.dataset.depth); }));
+  dotsEl.addEventListener('click', e => {
+    const b = e.target.closest('.depth__dot');
+    if (b) { touch(); goTo(+b.dataset.i); }
   });
-  // no toque: segura a coluna enquanto o dedo está nela e solta um pouco depois
-  wall.addEventListener('pointerdown', e => {
-    if (e.pointerType === 'mouse') return;
-    clearTimeout(touchTimer);
-    setActive(tileAt(e) || null);
+  root.addEventListener('keydown', e => {
+    if (e.target !== root) return;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); touch(); goTo(focus + (e.key === 'ArrowLeft' ? -1 : 1)); }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openBox(focus); }
   });
-  const releaseTouch = e => {
-    if (e.pointerType === 'mouse') return;
-    clearTimeout(touchTimer);
-    touchTimer = setTimeout(() => setActive(null), 1200);
+
+  // arrastar (mouse ou dedo); rolar a página na vertical continua livre (touch-action: pan-y)
+  root.addEventListener('pointerdown', e => {
+    if (e.button > 0 || e.target.closest('button')) return;
+    touch();
+    drag = { x: e.clientX, start: pos, lastX: e.clientX, lastT: performance.now(), v: 0, moved: false, id: e.pointerId };
+  });
+  root.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) > 6) {
+      drag.moved = true;
+      if (tween) tween.kill();
+      root.setPointerCapture(drag.id);
+    }
+    if (!drag.moved) return;
+    const now = performance.now();
+    drag.v = (e.clientX - drag.lastX) / Math.max(now - drag.lastT, 1);
+    drag.lastX = e.clientX;
+    drag.lastT = now;
+    pos = drag.start - dx / stepPx();
+    layout(pos);
+  });
+  const endDrag = () => {
+    const d = drag;
+    drag = null;
+    if (!d || !d.moved) return;
+    touch();
+    dragged = true;
+    setTimeout(() => { dragged = false; }, 0);
+    goTo(Math.round(pos - d.v * 180 / stepPx()));
   };
-  wall.addEventListener('pointerup', releaseTouch);
-  wall.addEventListener('pointercancel', releaseTouch);
-  wall.addEventListener('focusin', e => setActive(e.target.closest('.drift-wall__tile')));
-  wall.addEventListener('focusout', () => setActive(null));
-  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(wall);
-  build();
-  let resizeT = 0;
-  new ResizeObserver(() => { clearTimeout(resizeT); resizeT = setTimeout(build, 150); }).observe(wall);
-  reduced.addEventListener('change', run);
+  root.addEventListener('pointerup', endDrag);
+  root.addEventListener('pointercancel', endDrag);
+  // só a rolagem horizontal (trackpad) mexe no carrossel; a vertical rola a página normalmente
+  root.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    touch();
+    if (tween) tween.kill();
+    pos += clamp((e.deltaMode === 1 ? e.deltaX * 24 : e.deltaX) / (cards[0].offsetWidth * .9), -.6, .6);
+    layout(pos);
+    clearTimeout(wheelT);
+    wheelT = setTimeout(() => goTo(Math.round(pos)), 130);
+  }, { passive: false });
+
+  root.addEventListener('mouseenter', () => { hovered = true; });
+  root.addEventListener('mouseleave', () => { hovered = false; });
+  root.addEventListener('focusin', () => { focusedIn = true; });
+  root.addEventListener('focusout', () => { focusedIn = false; });
+  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(root);
+  setInterval(() => {
+    const idle = performance.now() - touchedAt > 6000;
+    if (idle && onScreen && !hovered && !focusedIn && !drag && !box.open && !document.hidden && !reduced.matches) goTo(focus + 1);
+  }, C.delay);
+
+  new ResizeObserver(([e]) => {
+    scale = clamp(e.contentRect.width / (cards[0].offsetWidth + spread() * 2 + 120), .4, 1);
+    layout(pos);
+  }).observe(root);
+  select(0);
+  layout(0);
 
   let cur = 0;
   const show = i => {
-    cur = (i + depoimentos.length) % depoimentos.length;
+    cur = (i + n) % n;
     const d = depoimentos[cur];
     img.src = `assets/depoimentos/${d.img}.webp`;
     img.width = d.w; img.height = d.h;
     img.alt = d.alt;
-    cap.textContent = `Print ${cur + 1} de ${depoimentos.length}`;
+    cap.textContent = `Print ${cur + 1} de ${n}`;
   };
-  $('#depoimentos').addEventListener('click', e => {
-    // no plano 3D o clique às vezes cai na coluna em vez do print: vale o print levantado
-    const b = e.target.closest('.dep') || (wall.contains(e.target) && active);
-    if (!b) return;
-    show(+b.dataset.i);
-    box.showModal();
-    run();
-  });
-  box.addEventListener('close', run);
+  // fechando o lightbox, o carrossel para no último print visto
+  box.addEventListener('close', () => { touch(); goTo(cur, false); root.focus({ preventScroll: true }); });
   $('.lightbox__close').addEventListener('click', () => box.close());
   $('.lightbox__prev').addEventListener('click', () => show(cur - 1));
   $('.lightbox__next').addEventListener('click', () => show(cur + 1));
@@ -279,7 +283,6 @@ $('#ano').textContent = new Date().getFullYear();
     if (e.key === 'ArrowLeft') show(cur - 1);
     if (e.key === 'ArrowRight') show(cur + 1);
   });
-  box.addEventListener('close', () => { const b = $(`.dep[data-i="${cur}"]`); if (b) b.focus({ preventScroll: true }); });
 }
 
 /* ---------- marquee: botão de pausa ---------- */

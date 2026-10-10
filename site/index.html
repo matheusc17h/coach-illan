@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap"></noscript>
 <link rel="preload" as="image" href="assets/illan-hero-pessoa-hd.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=23">
+<link rel="stylesheet" href="css/style.css?v=25">
 </head>
 <body>
 
@@ -391,12 +391,15 @@
       <h2 class="h2" id="dep-title" data-letters>Aluno de verdade. <span class="hl">Print de verdade.</span></h2>
       <p class="lead">Conversas reais do WhatsApp do Illan, sem edição de texto. Toque num print pra ver inteiro.</p>
     </div>
-    <!-- as duas artes do Illan com os prints dos alunos: o destaque da seção -->
-    <ul class="deps-top" id="deps-top"><!-- preenchido em js/main.js --></ul>
-    <!-- parede de prints (DriftWall, React Bits, portado pra JS puro em js/main.js) -->
-    <div class="drift-wall" id="deps-wall" role="group" aria-label="Prints dos alunos">
-      <div class="drift-wall__plane"><!-- preenchido em js/main.js --></div>
+    <!-- carrossel em profundidade com as artes do Illan e os prints dos alunos
+         (DepthCarousel, React Bits, portado pra JS puro em js/main.js) -->
+    <div class="depth" id="deps-depth" role="group" aria-roledescription="carrossel" aria-label="Prints dos alunos. Use as setas do teclado pra trocar e Enter pra ampliar." tabindex="0">
+      <div class="depth__stage"><!-- preenchido em js/main.js --></div>
+      <button class="icon-btn depth__arrow depth__arrow--prev" type="button" data-depth="-1" aria-label="Print anterior"><svg aria-hidden="true"><use href="#i-prev"/></svg></button>
+      <button class="icon-btn depth__arrow depth__arrow--next" type="button" data-depth="1" aria-label="Próximo print"><svg aria-hidden="true"><use href="#i-next"/></svg></button>
     </div>
+    <p class="dep__hook depth__hook" id="deps-hook" aria-live="polite"></p>
+    <div class="depth__dots" id="deps-dots" role="tablist" aria-label="Prints"></div>
     <div class="cta cta--c">
       <a class="btn btn--lg js-cta" href="#oferta">Quero ser o próximo print</a>
       <p class="micro">Acesso imediato · Pagamento seguro</p>
@@ -545,6 +548,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js" defer></script>
-<script src="js/main.js?v=19" defer></script>
+<script src="js/main.js?v=20" defer></script>
 </body>
 </html>

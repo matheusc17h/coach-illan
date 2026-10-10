@@ -265,7 +265,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 @media (max-width:767px){
   .hero__media{ display:grid; grid-template-columns:1fr 1fr; justify-items:center; align-items:start; column-gap:10px; padding-bottom:32px; }
   .hero__media > .hero__figure{ grid-column:1 / -1; }
-  .float{ position:relative; inset:auto; max-width:none; width:100%; margin-top:20px; }
+  .float{ position:relative; inset:auto; max-width:none; width:100%; margin-top:-52px; } /* sobem por cima do brilho vermelho embaixo da mão */
 }
 @media (min-width:600px){
   .float{ max-width:260px; font-size:.8125rem; }
@@ -562,68 +562,39 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 
 /* ---------- depoimentos ---------- */
 .sec--deps{ padding-bottom:56px; }
-/* destaques: as duas artes do Illan, grandes e lado a lado. As colunas seguem a proporção de cada
-   imagem (--ar = largura/altura), então as duas ficam com a mesma altura sem cortar nada. */
-.deps-top{ display:grid; gap:28px; max-width:420px; margin:0 auto 48px; }
-.deps-top .dep__hook{ font-size:1.25rem; }
-.deps-top .dep__phone{ padding:0; overflow:hidden; border-radius:var(--r-lg); }
-.deps-top .dep__phone img{ border-radius:0; }
-@media (min-width:768px){
-  .deps-top{ display:flex; max-width:980px; gap:32px; align-items:flex-end; }
-  .deps-top > li{ flex:var(--ar) 1 0; min-width:0; }
-}
-.dep{ display:block; width:100%; padding:0; border:0; background:none; text-align:left; cursor:zoom-in; border-radius:var(--r-md); }
 .dep__hook{ display:block; font-family:var(--f-title); font-weight:600; font-size:1.0625rem; line-height:1.3; margin-bottom:12px; text-wrap:balance; }
 .dep__hook::before{ content:"“"; color:var(--red); }
 .dep__hook::after{ content:"”"; color:var(--red); }
-.dep__phone{ display:block; padding:8px; border-radius:var(--r-md); background:var(--phone); border:1px solid var(--line); transition:transform .25s var(--ease); }
-.dep__phone img{ width:100%; height:auto; border-radius:10px; }
-.dep:hover .dep__phone{ transform:translateY(-3px); }
-
-/* parede de prints (DriftWall do React Bits): colunas deslizando num plano inclinado.
-   Tamanho dos cards e número de colunas vêm do JS (--dw-*). No fundo branco a borda some
-   no branco pela máscara; o véu branco some quando o print "levanta". */
-.drift-wall{
-  --dw-tile-w:124px; --dw-tile-h:180px; --dw-gap:12px; --dw-radius:12px;
-  --dw-lift:64px; --dw-dim:.92; --dw-overlay:#fff; --dw-edge:40%;
-  position:relative; height:500px; margin-inline:calc(50% - 50vw); overflow:hidden;
-  overflow:clip; perspective:1200px; perspective-origin:50% 50%;
-  -webkit-mask-image:radial-gradient(ellipse 78% 82% at 50% 46%, #000 var(--dw-edge), transparent 100%), linear-gradient(to top, transparent, #000 10%, #000 var(--dw-edge), transparent 100%);
-  -webkit-mask-composite:source-in;
-  mask-image:radial-gradient(ellipse 78% 82% at 50% 46%, #000 var(--dw-edge), transparent 100%), linear-gradient(to top, transparent, #000 10%, #000 var(--dw-edge), transparent 100%);
-  mask-composite:intersect;
-  touch-action:pan-y;
+/* carrossel em profundidade (DepthCarousel do React Bits): o print da frente inteiro,
+   os próximos recuando em fila. Os prints aparecem inteiros (contain) sobre o "celular" escuro. */
+.depth{
+  --dc-w:240px; --dc-h:370px;
+  position:relative; height:420px; margin:8px calc(var(--gutter) * -1) 0; overflow:hidden; overflow:clip;
+  perspective:1400px; perspective-origin:50% 50%;
+  touch-action:pan-y; user-select:none; -webkit-user-select:none; cursor:grab; outline:none;
 }
-@media (min-width:768px){ .drift-wall{ height:660px; } }
-.drift-wall__plane{
-  position:absolute; top:50%; left:50%; display:flex; transform-style:preserve-3d; transform-origin:50% 50%;
-  transform:translate(-50%, -50%) scale(1.18) rotateX(16deg) rotateY(-14deg) translateZ(-120px); will-change:transform;
+.depth:active{ cursor:grabbing; }
+.depth:focus-visible{ box-shadow:inset 0 0 0 3px var(--pr); border-radius:var(--r-md); }
+@media (min-width:768px){ .depth{ --dc-w:310px; --dc-h:470px; height:580px; margin-inline:0; } }
+.depth__stage{ position:absolute; inset:0; transform-style:preserve-3d; pointer-events:none; }
+.depth__card{
+  position:absolute; top:50%; left:50%; width:var(--dc-w); height:var(--dc-h); overflow:hidden;
+  border-radius:var(--r-lg); background:var(--phone); cursor:zoom-in;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.55), 0 8px 20px -10px rgba(0,0,0,.4);
+  transform:translate(-50%, -50%); transform-origin:center; will-change:transform, opacity, filter;
 }
-.drift-wall__col{ position:relative; width:calc(var(--dw-tile-w) + var(--dw-gap)); transform-style:preserve-3d; pointer-events:none; }
-.drift-wall__track{ display:flex; flex-direction:column; will-change:transform; transform-style:preserve-3d; }
-.drift-wall__tile{ position:relative; display:block; height:calc(var(--dw-tile-h) + var(--dw-gap)); flex:0 0 auto; border-radius:0; outline:none; pointer-events:auto; transform-style:preserve-3d; -webkit-tap-highlight-color:transparent; }
-.drift-wall__inner{
-  position:absolute; inset:calc(var(--dw-gap) / 2); display:block; overflow:hidden; border-radius:var(--dw-radius);
-  background:var(--phone); opacity:var(--dw-dim); transform:translateZ(0); pointer-events:none;
-  box-shadow:0 14px 30px -18px rgba(0,0,0,.5);
-  transition:transform .42s var(--ease), opacity .42s var(--ease), box-shadow .42s var(--ease);
-}
-.drift-wall__inner img{ width:100%; height:100%; object-fit:cover; object-position:top; user-select:none; -webkit-user-drag:none; }
-.drift-wall__overlay{ position:absolute; inset:0; background:var(--dw-overlay); opacity:.32; transition:opacity .42s var(--ease); }
-/* gancho do print sempre legível: fica acima do véu, num degradê escuro na base do card */
-.drift-wall .drift-wall__cap{
-  position:absolute; inset:auto 0 0; margin:0; padding:28px 10px 10px; color:#fff;
-  font-size:.75rem; line-height:1.25; background:linear-gradient(to top, rgba(6,2,3,.92) 30%, transparent);
-  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden;
-}
-.sec--deps .drift-wall .drift-wall__cap::before, .sec--deps .drift-wall .drift-wall__cap::after{ color:var(--red); }
-@media (min-width:768px){ .drift-wall .drift-wall__cap{ font-size:.875rem; padding:36px 12px 12px; } }
-.drift-wall__tile.is-active .drift-wall__inner, .drift-wall__tile:focus-visible .drift-wall__inner{
-  opacity:1; transform:translateZ(var(--dw-lift)); box-shadow:0 24px 60px -18px rgba(0,0,0,.7);
-}
-.drift-wall__tile.is-active .drift-wall__overlay, .drift-wall__tile:focus-visible .drift-wall__overlay{ opacity:0; }
-.drift-wall__tile:focus-visible .drift-wall__inner{ box-shadow:0 24px 60px -18px rgba(0,0,0,.7), 0 0 0 3px var(--pr); }
-@media (prefers-reduced-motion: reduce){ .drift-wall__plane, .drift-wall__track{ will-change:auto; } }
+.depth__card img{ width:100%; height:100%; object-fit:contain; pointer-events:none; -webkit-user-drag:none; }
+.depth__tint{ position:absolute; inset:0; background:#05060a; opacity:0; mix-blend-mode:multiply; pointer-events:none; }
+.depth__arrow{ position:absolute; top:50%; z-index:3000; transform:translateY(-50%); }
+.depth__arrow--prev{ left:max(8px, calc(50% - var(--dc-w) / 2 - 76px)); }
+.depth__arrow--next{ right:max(8px, calc(50% - var(--dc-w) / 2 - 76px)); }
+.depth__hook{ min-height:2.6em; max-width:30ch; margin:20px auto 0; text-align:center; font-size:1.25rem; }
+.depth__dots{ display:flex; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+.depth__dot{ width:24px; height:28px; padding:0; border:0; background:none; cursor:pointer; display:grid; place-items:center; }
+.depth__dot::before{ content:""; width:7px; height:7px; border-radius:999px; background:rgba(0,0,0,.22); transition:width .25s var(--ease), background .25s var(--ease); }
+.depth__dot[aria-selected="true"]::before{ width:20px; background:var(--pr); }
+.depth__dot:hover::before{ background:rgba(200,16,46,.55); }
+@media (prefers-reduced-motion: reduce){ .depth__card{ will-change:auto; } }
 
 .marquee{ display:flex; align-items:center; margin-top:40px; border-block:1px solid var(--line); background:var(--bg-2); }
 .marquee__toggle{ margin:8px; }
@@ -633,7 +604,6 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .marquee__list b{ color:var(--red); font-weight:700; margin-right:6px; }
 /* depoimentos no claro: prints continuam no "celular" escuro; aspas, nomes e setas em vermelho */
 .sec--deps .dep__hook::before, .sec--deps .dep__hook::after{ color:var(--pr); }
-.sec--deps .dep__phone{ border-color:transparent; box-shadow:0 18px 36px -18px rgba(0,0,0,.45); }
 .sec--deps .icon-btn{ background:#fff; border-color:rgba(0,0,0,.14); color:var(--ink); }
 .sec--deps .icon-btn:hover{ border-color:var(--pr); background:rgba(200,16,46,.06); }
 .sec--deps .marquee{ background:#f7f3f3; border-color:rgba(0,0,0,.08); }
