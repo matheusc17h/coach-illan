@@ -562,14 +562,6 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 
 /* ---------- depoimentos ---------- */
 .sec--deps{ padding-bottom:56px; }
-.deps-nav{ display:flex; justify-content:flex-end; gap:8px; margin:-16px 0 16px; }
-.deps{
-  display:grid; grid-auto-flow:column; grid-auto-columns:min(80%, 320px); gap:14px; align-items:start;
-  overflow-x:auto; scroll-snap-type:x mandatory; overscroll-behavior-x:contain;
-  padding:6px var(--gutter) 22px; margin-inline:calc(var(--gutter) * -1); scroll-padding-inline:var(--gutter);
-  scrollbar-width:thin; scrollbar-color:rgba(255,58,76,.5) transparent;
-}
-.deps > li{ scroll-snap-align:start; }
 /* destaques: as duas artes do Illan, grandes e lado a lado. As colunas seguem a proporção de cada
    imagem (--ar = largura/altura), então as duas ficam com a mesma altura sem cortar nada. */
 .deps-top{ display:grid; gap:28px; max-width:420px; margin:0 auto 48px; }
@@ -580,8 +572,6 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   .deps-top{ display:flex; max-width:980px; gap:32px; align-items:flex-end; }
   .deps-top > li{ flex:var(--ar) 1 0; min-width:0; }
 }
-/* carrossel automático (celular): sem snap, senão o navegador briga com a rolagem contínua */
-.deps.is-auto{ scroll-snap-type:none; scroll-behavior:auto; }
 .dep{ display:block; width:100%; padding:0; border:0; background:none; text-align:left; cursor:zoom-in; border-radius:var(--r-md); }
 .dep__hook{ display:block; font-family:var(--f-title); font-weight:600; font-size:1.0625rem; line-height:1.3; margin-bottom:12px; text-wrap:balance; }
 .dep__hook::before{ content:"“"; color:var(--red); }
@@ -589,12 +579,51 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .dep__phone{ display:block; padding:8px; border-radius:var(--r-md); background:var(--phone); border:1px solid var(--line); transition:transform .25s var(--ease); }
 .dep__phone img{ width:100%; height:auto; border-radius:10px; }
 .dep:hover .dep__phone{ transform:translateY(-3px); }
-@media (min-width:768px){
-  .deps-nav{ display:none; }
-  .deps{ display:block; columns:2; column-gap:24px; overflow:visible; padding:0; margin:0; }
-  .deps > li{ break-inside:avoid; margin-bottom:28px; }
+
+/* parede de prints (DriftWall do React Bits): colunas deslizando num plano inclinado.
+   Tamanho dos cards e número de colunas vêm do JS (--dw-*). No fundo branco a borda some
+   no branco pela máscara; o véu branco some quando o print "levanta". */
+.drift-wall{
+  --dw-tile-w:124px; --dw-tile-h:180px; --dw-gap:12px; --dw-radius:12px;
+  --dw-lift:64px; --dw-dim:.92; --dw-overlay:#fff; --dw-edge:40%;
+  position:relative; height:500px; margin-inline:calc(50% - 50vw); overflow:hidden;
+  overflow:clip; perspective:1200px; perspective-origin:50% 50%;
+  -webkit-mask-image:radial-gradient(ellipse 78% 82% at 50% 46%, #000 var(--dw-edge), transparent 100%), linear-gradient(to top, transparent, #000 10%, #000 var(--dw-edge), transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:radial-gradient(ellipse 78% 82% at 50% 46%, #000 var(--dw-edge), transparent 100%), linear-gradient(to top, transparent, #000 10%, #000 var(--dw-edge), transparent 100%);
+  mask-composite:intersect;
+  touch-action:pan-y;
 }
-@media (min-width:1100px){ .deps{ columns:3; } }
+@media (min-width:768px){ .drift-wall{ height:660px; } }
+.drift-wall__plane{
+  position:absolute; top:50%; left:50%; display:flex; transform-style:preserve-3d; transform-origin:50% 50%;
+  transform:translate(-50%, -50%) scale(1.18) rotateX(16deg) rotateY(-14deg) translateZ(-120px); will-change:transform;
+}
+.drift-wall__col{ position:relative; width:calc(var(--dw-tile-w) + var(--dw-gap)); transform-style:preserve-3d; pointer-events:none; }
+.drift-wall__track{ display:flex; flex-direction:column; will-change:transform; transform-style:preserve-3d; }
+.drift-wall__tile{ position:relative; display:block; height:calc(var(--dw-tile-h) + var(--dw-gap)); flex:0 0 auto; border-radius:0; outline:none; pointer-events:auto; transform-style:preserve-3d; -webkit-tap-highlight-color:transparent; }
+.drift-wall__inner{
+  position:absolute; inset:calc(var(--dw-gap) / 2); display:block; overflow:hidden; border-radius:var(--dw-radius);
+  background:var(--phone); opacity:var(--dw-dim); transform:translateZ(0); pointer-events:none;
+  box-shadow:0 14px 30px -18px rgba(0,0,0,.5);
+  transition:transform .42s var(--ease), opacity .42s var(--ease), box-shadow .42s var(--ease);
+}
+.drift-wall__inner img{ width:100%; height:100%; object-fit:cover; object-position:top; user-select:none; -webkit-user-drag:none; }
+.drift-wall__overlay{ position:absolute; inset:0; background:var(--dw-overlay); opacity:.32; transition:opacity .42s var(--ease); }
+/* gancho do print sempre legível: fica acima do véu, num degradê escuro na base do card */
+.drift-wall .drift-wall__cap{
+  position:absolute; inset:auto 0 0; margin:0; padding:28px 10px 10px; color:#fff;
+  font-size:.75rem; line-height:1.25; background:linear-gradient(to top, rgba(6,2,3,.92) 30%, transparent);
+  display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden;
+}
+.sec--deps .drift-wall .drift-wall__cap::before, .sec--deps .drift-wall .drift-wall__cap::after{ color:var(--red); }
+@media (min-width:768px){ .drift-wall .drift-wall__cap{ font-size:.875rem; padding:36px 12px 12px; } }
+.drift-wall__tile.is-active .drift-wall__inner, .drift-wall__tile:focus-visible .drift-wall__inner{
+  opacity:1; transform:translateZ(var(--dw-lift)); box-shadow:0 24px 60px -18px rgba(0,0,0,.7);
+}
+.drift-wall__tile.is-active .drift-wall__overlay, .drift-wall__tile:focus-visible .drift-wall__overlay{ opacity:0; }
+.drift-wall__tile:focus-visible .drift-wall__inner{ box-shadow:0 24px 60px -18px rgba(0,0,0,.7), 0 0 0 3px var(--pr); }
+@media (prefers-reduced-motion: reduce){ .drift-wall__plane, .drift-wall__track{ will-change:auto; } }
 
 .marquee{ display:flex; align-items:center; margin-top:40px; border-block:1px solid var(--line); background:var(--bg-2); }
 .marquee__toggle{ margin:8px; }
@@ -610,7 +639,6 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .sec--deps .marquee{ background:#f7f3f3; border-color:rgba(0,0,0,.08); }
 .sec--deps .marquee__list li{ color:var(--ink-2); }
 .sec--deps .marquee__list b{ color:var(--pr); }
-.sec--deps .deps{ scrollbar-color:rgba(200,16,46,.5) transparent; }
 .marquee:hover .marquee__list,.marquee:focus-within .marquee__list,.marquee.is-paused .marquee__list{ animation-play-state:paused; }
 @keyframes marquee{ to{ transform:translateX(-100%); } }
 

@@ -118,7 +118,6 @@ $('#ano').textContent = new Date().getFullYear();
 {
   // destaques primeiro: assim a ordem do lightbox é a mesma da tela
   depoimentos.sort((a, b) => !!b.destaque - !!a.destaque);
-  const list = $('#deps');
   const card = (d, i) => `
     <li${d.destaque ? ` style="--ar:${d.w / d.h}"` : ''}>
       <button class="dep${d.destaque ? ' dep--top' : ''}" type="button" data-i="${i}" aria-label="Ampliar print: ${d.hook}">
@@ -127,79 +126,133 @@ $('#ano').textContent = new Date().getFullYear();
       </button>
     </li>`;
   $('#deps-top').innerHTML = depoimentos.map((d, i) => (d.destaque ? card(d, i) : '')).join('');
-  list.innerHTML = depoimentos.map((d, i) => (d.destaque ? '' : card(d, i))).join('');
-
-  /* Carrossel perpétuo no celular: roda devagar sozinho, para com o dedo em cima
-     (ou com o lightbox aberto) e volta a rodar quando a pessoa solta.
-     Os prints são duplicados pra emendar o fim no começo sem salto. */
-  const mobile = matchMedia('(max-width: 767px)');
-  const SPEED = 26; // px por segundo: dá tempo de ler o gancho de cada print
-  let auto = null;
-  const resumeSoon = (ms = 900) => auto && auto.resume(ms);
-  const stopNow = () => auto && auto.pause();
-  const startAuto = () => {
-    if (auto || !mobile.matches || reduced.matches) return;
-    const originals = [...list.children];
-    originals.forEach(li => {
-      const c = li.cloneNode(true);
-      c.setAttribute('aria-hidden', 'true');
-      c.classList.add('is-clone');
-      $('button', c).tabIndex = -1;
-      list.append(c);
-    });
-    list.classList.add('is-auto');
-    let pos = list.scrollLeft, last = 0, raf = 0, held = false, visible = false, timer = 0;
-    const loopW = () => list.children[originals.length].offsetLeft - originals[0].offsetLeft;
-    const tick = t => {
-      const dt = last ? Math.min((t - last) / 1000, .1) : 0;
-      last = t;
-      const w = loopW();
-      pos += SPEED * dt;
-      if (pos >= w) pos -= w;
-      list.scrollLeft = pos;
-      raf = requestAnimationFrame(tick);
-    };
-    const run = () => {
-      cancelAnimationFrame(raf);
-      if (held || !visible || box.open) return;
-      const w = loopW();
-      pos = list.scrollLeft >= w ? list.scrollLeft - w : list.scrollLeft;
-      last = 0;
-      raf = requestAnimationFrame(tick);
-    };
-    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; run(); });
-    io.observe(list);
-    auto = {
-      pause() { clearTimeout(timer); held = true; cancelAnimationFrame(raf); },
-      resume(ms) { clearTimeout(timer); timer = setTimeout(() => { held = false; run(); }, ms); },
-      destroy() {
-        this.pause(); io.disconnect();
-        $$('.is-clone', list).forEach(c => c.remove());
-        list.classList.remove('is-auto');
-        auto = null;
-      },
-    };
-  };
-  list.addEventListener('touchstart', stopNow, { passive: true });
-  list.addEventListener('touchend', () => resumeSoon(), { passive: true });
-  list.addEventListener('touchcancel', () => resumeSoon(), { passive: true });
-  list.addEventListener('mouseenter', stopNow);
-  list.addEventListener('mouseleave', () => resumeSoon(300));
-  list.addEventListener('focusin', stopNow);
-  list.addEventListener('focusout', () => resumeSoon());
-  const syncAuto = () => (mobile.matches && !reduced.matches ? startAuto() : auto && auto.destroy());
-  mobile.addEventListener('change', syncAuto);
-  reduced.addEventListener('change', syncAuto);
-
-  $$('[data-scroll="deps"]').forEach(btn => btn.addEventListener('click', () => {
-    stopNow();
-    list.scrollBy({ left: +btn.dataset.dir * list.clientWidth * .8, behavior: reduced.matches ? 'auto' : 'smooth' });
-    resumeSoon(2500);
-  }));
 
   const box = $('#lightbox');
   const img = $('#lightbox-img');
   const cap = $('#lightbox-cap');
+
+  /* Parede de prints: DriftWall do React Bits portado pra JS puro. Colunas deslizam em sentidos
+     alternados num plano inclinado; a coluna sob o cursor (ou o dedo) para e o print levanta.
+     Clique abre o lightbox. Fora da tela ou com o lightbox aberto a animação dorme. */
+  const wall = $('#deps-wall');
+  const plane = $('.drift-wall__plane', wall);
+  const prints = depoimentos.map((d, i) => ({ ...d, i })).filter(d => !d.destaque);
+  const wide = matchMedia('(min-width: 768px)');
+  const W = { tilt: 16, turn: -14, depth: 120, speed: 30, variance: .45, parallax: .6 };
+  const ptr = { x: 0, y: 0 }, damped = { x: 0, y: 0 };
+  let cols = [], tracks = [], offsets = [], vels = [], base = [], hoverCol = -1, active = null;
+  let raf = 0, last = 0, onScreen = false, touchTimer = 0;
+  const factor = c => 1 + W.variance * (((c * .6180339887 + .35) % 1) * 2 - 1);
+  const tile = (d, c, first) => `
+    <button class="drift-wall__tile dep" type="button" data-i="${d.i}" data-col="${c}"${first ? ` aria-label="Ampliar print: ${d.hook}"` : ' tabindex="-1" aria-hidden="true"'}>
+      <span class="drift-wall__inner">
+        <img src="assets/depoimentos/${d.img}.webp" width="${d.w}" height="${d.h}" alt="" loading="lazy" decoding="async" draggable="false">
+        <span class="drift-wall__overlay"></span>
+        <span class="dep__hook drift-wall__cap">${d.hook}</span>
+      </span>
+    </button>`;
+  const setPlane = () => {
+    plane.style.transform = `translate(-50%, -50%) scale(1.18) rotateX(${W.tilt + damped.y}deg) rotateY(${W.turn + damped.x}deg) translateZ(${-W.depth}px)`;
+  };
+  let built = '';
+  const build = () => {
+    const size = wide.matches ? { w: 180, h: 260, gap: 18 } : { w: 124, h: 180, gap: 12 };
+    // colunas suficientes pra cobrir a largura do plano inclinado; faltando print, repete
+    const n = Math.max(3, Math.ceil(wall.clientWidth / ((size.w + size.gap) * 1.18)) + 1);
+    const key = `${n}:${size.w}`;
+    if (key === built) return;
+    built = key;
+    wall.style.setProperty('--dw-tile-w', `${size.w}px`);
+    wall.style.setProperty('--dw-tile-h', `${size.h}px`);
+    wall.style.setProperty('--dw-gap', `${size.gap}px`);
+    const per = Math.max(2, Math.ceil(prints.length / n));
+    const wallH = wall.clientHeight || 600;
+    cols = Array.from({ length: n }, (_, c) => {
+      const g = Array.from({ length: per }, (_, j) => prints[(c * per + j) % prints.length]);
+      const copyH = g.length * (size.h + size.gap);
+      return { g, copyH, copies: Math.max(2, Math.ceil(wallH * 1.6 / copyH) + 1) };
+    });
+    // só a primeira aparição de cada print entra no Tab; as repetições são decorativas
+    const seen = new Set();
+    const html = cols.map((col, c) => `<div class="drift-wall__col"><div class="drift-wall__track">${
+      Array.from({ length: col.copies }, () => col.g.map(d => {
+        const first = !seen.has(d.i);
+        seen.add(d.i);
+        return tile(d, c, first);
+      }).join('')).join('')
+    }</div></div>`).join('');
+    plane.innerHTML = html;
+    tracks = $$('.drift-wall__track', plane);
+    offsets = cols.map((col, c) => col.copyH * ((c * .37) % 1));
+    vels = cols.map(() => 0);
+    base = cols.map((_, c) => W.speed * factor(c) * (c % 2 ? -1 : 1));
+    tracks.forEach((t, c) => { t.style.transform = `translate3d(0, ${-offsets[c]}px, 0)`; });
+    active = null; hoverCol = -1;
+    setPlane();
+  };
+  const frame = t => {
+    const dt = last ? Math.min(.05, (t - last) / 1000) : 0;
+    last = t;
+    const k = 1 - Math.exp(-dt / .12);
+    damped.x += (ptr.x * W.parallax * 8 - damped.x) * k;
+    damped.y += (-ptr.y * W.parallax * 8 - damped.y) * k;
+    setPlane();
+    tracks.forEach((el, c) => {
+      const target = hoverCol === c ? 0 : base[c];
+      vels[c] += (target - vels[c]) * (1 - Math.exp(-dt / (target ? .28 : .16)));
+      const h = cols[c].copyH;
+      offsets[c] = (((offsets[c] + vels[c] * dt) % h) + h) % h;
+      el.style.transform = `translate3d(0, ${-offsets[c]}px, 0)`;
+    });
+    raf = requestAnimationFrame(frame);
+  };
+  const run = () => {
+    cancelAnimationFrame(raf);
+    last = 0;
+    if (onScreen && !reduced.matches && !box.open) raf = requestAnimationFrame(frame);
+  };
+  const setActive = el => {
+    if (el === active) return;
+    if (active) active.classList.remove('is-active');
+    active = el;
+    if (el) el.classList.add('is-active');
+    hoverCol = el ? +el.dataset.col : -1;
+  };
+  const tileAt = e => document.elementFromPoint(e.clientX, e.clientY)?.closest('.drift-wall__tile');
+  wall.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    const r = wall.getBoundingClientRect();
+    ptr.x = (e.clientX - r.left) / r.width - .5;
+    ptr.y = (e.clientY - r.top) / r.height - .5;
+    const t = tileAt(e);
+    if (t) setActive(t);
+  });
+  wall.addEventListener('pointerleave', e => {
+    if (e.pointerType !== 'mouse') return;
+    ptr.x = ptr.y = 0;
+    setActive(null);
+  });
+  // no toque: segura a coluna enquanto o dedo está nela e solta um pouco depois
+  wall.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse') return;
+    clearTimeout(touchTimer);
+    setActive(tileAt(e) || null);
+  });
+  const releaseTouch = e => {
+    if (e.pointerType === 'mouse') return;
+    clearTimeout(touchTimer);
+    touchTimer = setTimeout(() => setActive(null), 1200);
+  };
+  wall.addEventListener('pointerup', releaseTouch);
+  wall.addEventListener('pointercancel', releaseTouch);
+  wall.addEventListener('focusin', e => setActive(e.target.closest('.drift-wall__tile')));
+  wall.addEventListener('focusout', () => setActive(null));
+  new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; run(); }).observe(wall);
+  build();
+  let resizeT = 0;
+  new ResizeObserver(() => { clearTimeout(resizeT); resizeT = setTimeout(build, 150); }).observe(wall);
+  reduced.addEventListener('change', run);
+
   let cur = 0;
   const show = i => {
     cur = (i + depoimentos.length) % depoimentos.length;
@@ -210,14 +263,14 @@ $('#ano').textContent = new Date().getFullYear();
     cap.textContent = `Print ${cur + 1} de ${depoimentos.length}`;
   };
   $('#depoimentos').addEventListener('click', e => {
-    const b = e.target.closest('.dep');
+    // no plano 3D o clique às vezes cai na coluna em vez do print: vale o print levantado
+    const b = e.target.closest('.dep') || (wall.contains(e.target) && active);
     if (!b) return;
     show(+b.dataset.i);
-    stopNow();
     box.showModal();
+    run();
   });
-  box.addEventListener('close', () => resumeSoon(600));
-  syncAuto();
+  box.addEventListener('close', run);
   $('.lightbox__close').addEventListener('click', () => box.close());
   $('.lightbox__prev').addEventListener('click', () => show(cur - 1));
   $('.lightbox__next').addEventListener('click', () => show(cur + 1));
@@ -226,7 +279,7 @@ $('#ano').textContent = new Date().getFullYear();
     if (e.key === 'ArrowLeft') show(cur - 1);
     if (e.key === 'ArrowRight') show(cur + 1);
   });
-  box.addEventListener('close', () => { const b = $(`.dep[data-i="${cur}"]`); if (b) b.focus(); });
+  box.addEventListener('close', () => { const b = $(`.dep[data-i="${cur}"]`); if (b) b.focus({ preventScroll: true }); });
 }
 
 /* ---------- marquee: botão de pausa ---------- */

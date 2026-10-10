@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap"></noscript>
 <link rel="preload" as="image" href="assets/illan-hero-pessoa-hd.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=19">
+<link rel="stylesheet" href="css/style.css?v=23">
 </head>
 <body>
 
@@ -393,11 +393,10 @@
     </div>
     <!-- as duas artes do Illan com os prints dos alunos: o destaque da seção -->
     <ul class="deps-top" id="deps-top"><!-- preenchido em js/main.js --></ul>
-    <div class="deps-nav">
-      <button class="icon-btn" type="button" data-scroll="deps" data-dir="-1" aria-label="Prints anteriores"><svg aria-hidden="true"><use href="#i-prev"/></svg></button>
-      <button class="icon-btn" type="button" data-scroll="deps" data-dir="1" aria-label="Próximos prints"><svg aria-hidden="true"><use href="#i-next"/></svg></button>
+    <!-- parede de prints (DriftWall, React Bits, portado pra JS puro em js/main.js) -->
+    <div class="drift-wall" id="deps-wall" role="group" aria-label="Prints dos alunos">
+      <div class="drift-wall__plane"><!-- preenchido em js/main.js --></div>
     </div>
-    <ul class="deps" id="deps"><!-- preenchido em js/main.js --></ul>
     <div class="cta cta--c">
       <a class="btn btn--lg js-cta" href="#oferta">Quero ser o próximo print</a>
       <p class="micro">Acesso imediato · Pagamento seguro</p>
@@ -546,6 +545,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js" defer></script>
-<script src="js/main.js?v=16" defer></script>
+<script src="js/main.js?v=19" defer></script>
 </body>
 </html>
