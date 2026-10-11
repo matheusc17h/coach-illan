@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap"></noscript>
 <link rel="preload" as="image" href="assets/illan-hero-pessoa-hd.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=25">
+<link rel="stylesheet" href="css/style.css?v=27">
 </head>
 <body>
 
@@ -245,12 +245,18 @@
     <div class="produto__side">
       <h2 class="h2" id="aulas-title" data-letters>O que tem <span class="hl">dentro</span></h2>
       <p class="lead">Cada aula resolve um problema concreto e termina com um exercício. A regra é uma só: um foco por vez.</p>
-      <div class="capa" aria-hidden="true">
-        <span class="capa__tag">Guia oficial do aluno</span>
-        <span class="capa__a">Illan</span>
-        <span class="capa__b">Evolution</span>
-        <span class="capa__ed">Edição EA FC 27</span>
-        <span class="capa__n">5 níveis · 22 aulas · 2 extras</span>
+      <!-- capa inclina seguindo o mouse (TiltedCard, React Bits, portado pra JS puro em js/main.js) -->
+      <div class="tilt" aria-hidden="true">
+        <div class="tilt__inner">
+          <div class="capa">
+            <span class="capa__tag">Guia oficial do aluno</span>
+            <span class="capa__a">Illan</span>
+            <span class="capa__b">Evolution</span>
+            <span class="capa__ed">Edição EA FC 27</span>
+            <span class="capa__n">5 níveis · 22 aulas · 2 extras</span>
+          </div>
+        </div>
+        <span class="tilt__tip">Guia oficial do aluno em PDF</span>
       </div>
       <ul class="checks">
         <li>22 aulas em 5 níveis, do pré-jogo à alta performance</li>
@@ -548,6 +554,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js" defer></script>
-<script src="js/main.js?v=20" defer></script>
+<script src="js/main.js?v=22" defer></script>
 </body>
 </html>

@@ -285,6 +285,68 @@ $('#ano').textContent = new Date().getFullYear();
   });
 }
 
+/* ---------- capa do guia: inclina seguindo o mouse ----------
+   TiltedCard do React Bits portado pra JS puro. As molas imitam as do motion (rigidez, amortecimento, massa);
+   a etiqueta segue o cursor e balança com a velocidade vertical. Só com mouse e com movimento permitido. */
+{
+  const fig = $('.tilt');
+  if (fig && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const inner = $('.tilt__inner', fig);
+    const tip = $('.tilt__tip', fig);
+    const AMP = 12, SCALE = 1.06;
+    const spring = (x, k, c, m) => ({ x, t: x, v: 0, k, c, m });
+    const rx = spring(0, 100, 30, 2), ry = spring(0, 100, 30, 2), sc = spring(1, 100, 30, 2);
+    const op = spring(0, 100, 10, 1), rot = spring(0, 350, 30, 1);
+    const all = [rx, ry, sc, op, rot];
+    let raf = 0, last = 0, lastY = 0, tx = 0, ty = 0;
+    const paint = () => {
+      inner.style.transform = `rotateX(${rx.x.toFixed(3)}deg) rotateY(${ry.x.toFixed(3)}deg) scale(${sc.x.toFixed(4)})`;
+      tip.style.opacity = Math.min(1, Math.max(0, op.x)).toFixed(3);
+      tip.style.transform = `translate(${tx + 14}px, ${ty + 14}px) rotate(${rot.x.toFixed(2)}deg)`;
+    };
+    const tick = now => {
+      const dt = Math.min((now - last) / 1000, .05);
+      last = now;
+      let moving = false;
+      all.forEach(s => {
+        for (let h = dt; h > 0; h -= .004) {
+          const st = Math.min(h, .004);
+          s.v += (-s.k * (s.x - s.t) - s.c * s.v) / s.m * st;
+          s.x += s.v * st;
+        }
+        if (Math.abs(s.x - s.t) > .0005 || Math.abs(s.v) > .0005) moving = true;
+        else { s.x = s.t; s.v = 0; }
+      });
+      paint();
+      raf = moving ? requestAnimationFrame(tick) : 0;
+    };
+    const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+    fig.addEventListener('mouseenter', e => {
+      if (reduced.matches) return;
+      sc.t = SCALE; op.t = 1;
+      lastY = e.clientY - fig.getBoundingClientRect().top - fig.offsetHeight / 2;
+      kick();
+    });
+    fig.addEventListener('mousemove', e => {
+      if (reduced.matches) return;
+      const r = fig.getBoundingClientRect();
+      const ox = e.clientX - r.left - r.width / 2;
+      const oy = e.clientY - r.top - r.height / 2;
+      rx.t = (oy / (r.height / 2)) * -AMP;
+      ry.t = (ox / (r.width / 2)) * AMP;
+      tx = e.clientX - r.left;
+      ty = e.clientY - r.top;
+      rot.t = Math.max(-12, Math.min(12, -(oy - lastY) * .6));
+      lastY = oy;
+      kick();
+    });
+    fig.addEventListener('mouseleave', () => {
+      rx.t = ry.t = rot.t = op.t = 0; sc.t = 1;
+      kick();
+    });
+  }
+}
+
 /* ---------- marquee: botão de pausa ---------- */
 {
   const m = $('.marquee');
