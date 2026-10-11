@@ -427,6 +427,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 }
 /* coluna única: capa centralizada */
 @media (max-width:999px){ .tilt{ margin-inline:auto; } }
+/* no post do título o invólucro só acompanha a foto (o tamanho e o giro vêm do .post) */
+.tilt--post{ max-width:none; margin:0; }
 /* sem mouse não há inclinação nem etiqueta */
 @media (hover:none), (pointer:coarse){ .tilt__tip{ display:none; } }
 .capa::before{ content:""; position:absolute; inset:0; background:url("../assets/background-1.webp") center/cover; opacity:.35; mix-blend-mode:screen; }

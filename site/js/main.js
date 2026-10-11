@@ -285,12 +285,11 @@ $('#ano').textContent = new Date().getFullYear();
   });
 }
 
-/* ---------- capa do guia: inclina seguindo o mouse ----------
+/* ---------- capa do guia e post do título: inclinam seguindo o mouse ----------
    TiltedCard do React Bits portado pra JS puro. As molas imitam as do motion (rigidez, amortecimento, massa);
    a etiqueta segue o cursor e balança com a velocidade vertical. Só com mouse e com movimento permitido. */
-{
-  const fig = $('.tilt');
-  if (fig && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  $$('.tilt').forEach(fig => {
     const inner = $('.tilt__inner', fig);
     const tip = $('.tilt__tip', fig);
     const AMP = 12, SCALE = 1.06;
@@ -344,7 +343,7 @@ $('#ano').textContent = new Date().getFullYear();
       rx.t = ry.t = rot.t = op.t = 0; sc.t = 1;
       kick();
     });
-  }
+  });
 }
 
 /* ---------- marquee: botão de pausa ---------- */
