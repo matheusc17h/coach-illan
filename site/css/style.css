@@ -639,6 +639,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .selos{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px 22px; margin-top:18px; font-size:.8125rem; color:var(--txt-2); }
 .selos li{ display:flex; align-items:center; gap:7px; }
 .selos svg{ width:18px; height:18px; color:#fff; }
+.oferta__info, .oferta__buy{ display:contents; }
 /* garantia: faz parte do card da oferta, separada só por uma linha (sem caixa dentro da caixa) */
 .garantia{ display:flex; gap:14px; width:100%; text-align:left; margin-top:28px; padding-top:24px; border-top:1px solid var(--line); }
 .garantia > svg{ flex:none; width:40px; height:40px; color:var(--gold); }
@@ -710,6 +711,114 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   .lightbox__prev,.lightbox__next{ position:absolute; bottom:16px; }
   .lightbox__prev{ left:16px; } .lightbox__next{ right:16px; }
   .lightbox img{ max-height:calc(100svh - 200px); }
+}
+
+/* =========================================================
+   DESKTOP: CADA SEÇÃO CABE NUMA TELA
+   Num notebook comum (1366–1536 de largura, ~700px úteis de altura) as seções passavam de uma tela:
+   a pessoa rolava no meio de um bloco sem ver onde ele começava e acabava, e o botão de cada seção
+   ficava sempre "mais pra baixo". Aqui o ritmo vertical segue a ALTURA da tela (vh), não a largura:
+   espaços, títulos e mídias encolhem em telas baixas e voltam ao tamanho cheio em monitores altos.
+   Onde dá, o conteúdo vai pro lado em vez de empilhar (leitura em Z: o que é → por quê → botão).
+   Celular fica como está.
+   ========================================================= */
+@media (min-width:1000px){
+  /* ritmo base: respiro proporcional à altura (73px numa tela de 730, 112px só em tela alta) */
+  .sec{ padding-block:clamp(56px, 10vh, 112px); }
+  .sec__head{ margin-bottom:clamp(22px, 4vh, 40px); }
+  .lead{ margin-top:10px; }
+  .cta{ margin-top:clamp(20px, 3.4vh, 32px); }
+  /* títulos limitados pela altura também: 2 linhas de h2 nunca comem mais que ~13% da tela */
+  .h2{ font-size:clamp(2rem, min(1.1rem + 3.4vw, 6.4vh), 3.5rem); }
+  .about__title{ font-size:clamp(2.2rem, min(1.6rem + 3.4vw, 7vh), 4rem); }
+  .oferta__title{ font-size:clamp(2.2rem, min(1.6rem + 3.6vw, 6.6vh), 3.6rem); }
+  .final__title{ font-size:clamp(1.9rem, min(1.2rem + 3.4vw, 6.6vh), 3.6rem); }
+
+  /* hero: exatamente uma tela, descontando o header */
+  .hero__grid{ min-height:calc(100svh - var(--header-h)); }
+  .hero__text{ padding-block:clamp(24px, 5vh, 48px) clamp(32px, 6vh, 64px); }
+  .hero__img{ height:min(84svh, 760px); }
+  .hero__title{ font-size:clamp(2.1rem, min(1.25rem + 3.9vw, 7.4vh), 4.1rem); }
+
+  /* pra quem é: as fotos deixam de ditar a altura */
+  .pv__card:first-child .pv__img{ min-height:0; }
+  .pv__card:not(:first-child) .pv__img{ min-height:clamp(150px, 24vh, 230px); }
+  .pv__card:first-child p{ padding-block:18px 22px; }
+
+  /* o que mudou: título e explicação lado a lado; tabela mais densa, a leitura continua em linha */
+  #mudou .sec__head{ max-width:none; display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); column-gap:56px; align-items:end; }
+  #mudou .sec__head .lead{ margin-top:0; }
+  .mudancas > li{ padding-block:clamp(10px, 1.8vh, 26px); }
+  .ba, .pra-voce{ font-size:.875rem; }
+  .mudancas h3{ font-size:1.125rem; }
+  .note{ margin-top:clamp(16px, 2.6vh, 28px); }
+
+  /* sobre: foto do tamanho da tela, blocos de texto mais juntos */
+  .about__media{ max-width:min(520px, 72vh); }
+  .about__role{ margin:8px 0 14px; }
+  .about__text > p{ margin-bottom:10px; }
+  .quote{ margin:12px 0; padding:14px 18px; }
+  .trofeus{ margin-top:12px; }
+  .trofeus li{ padding:10px 14px; }
+
+  /* o que tem dentro: título e capa lado a lado, os 6 itens em duas colunas embaixo.
+     O mapa das aulas ao lado fica mais enxuto (linhas de 52px, ainda confortáveis pro clique). */
+  .produto{ grid-template-columns:minmax(0, 1fr) minmax(0, 1.1fr); gap:clamp(32px, 4vw, 64px); align-items:start; }
+  .produto__side{ display:grid; grid-template-columns:minmax(0, 1fr) auto; grid-template-areas:"titulo capa" "texto capa" "lista lista"; column-gap:28px; align-items:start; }
+  .produto__side > .h2{ grid-area:titulo; }
+  .produto__side > .lead{ grid-area:texto; }
+  .produto__side > .tilt{ grid-area:capa; width:clamp(160px, 28vh, 240px); margin:0; }
+  .produto__side > .checks{ grid-area:lista; grid-template-columns:1fr 1fr; gap:10px 24px; margin-top:clamp(20px, 3.4vh, 32px); font-size:.9375rem; }
+  .capa{ padding:20px 18px; }
+  .capa__a{ font-size:clamp(1.9rem, 5vh, 2.9rem); }
+  .capa__b{ font-size:clamp(.9375rem, 2.4vh, 1.25rem); }
+  .capa__ed{ margin-top:10px; font-size:clamp(.8125rem, 2vh, 1rem); }
+  .nivel summary{ min-height:50px; padding-block:8px; }
+  .aulas li{ padding-block:6px; }
+  .nivel__flag{ margin-bottom:8px; }
+  .niveis{ gap:8px; }
+
+  /* plano: as 4 semanas lado a lado, como um calendário. A linha passa pelos pontos, da semana 1 à 4,
+     e enche pro lado com a rolagem (js/main.js). Cada coluna: ponto, semana e título, card. */
+  .plano-wrap{ max-width:none; }
+  .plano{ grid-template-columns:repeat(4, minmax(0, 1fr)); gap:20px; }
+  .semana{ grid-template-columns:minmax(0, 1fr); grid-template-areas:"dot" "head" "card"; grid-template-rows:auto auto 1fr; row-gap:14px; }
+  .semana__head{ text-align:left; padding-top:0; }
+  .semana__dot{ justify-self:start; margin:0 0 0 1px; }
+  .semana h3{ font-size:clamp(1.375rem, 3.6vh, 1.75rem); margin-top:8px; }
+  .semana__card{ padding:16px 20px; display:flex; flex-direction:column; justify-content:space-between; }
+  .meta{ margin-top:12px; padding-top:10px; }
+  /* linha horizontal: do centro do 1º ponto ao centro do 4º (cada coluna = 1/4 menos o vão) */
+  .plano__bar{ left:8px; right:calc(25% - 15px - 8px); top:7px; bottom:auto; width:auto; height:2px; margin-left:0; }
+  .plano__bar i{ transform-origin:left; }
+  /* o card ativo cresce e flutua: espaço pra ele não encostar no botão */
+  .sec--plano .cta{ margin-top:clamp(32px, 5.4vh, 48px); }
+
+  /* quem joga com o Illan: foto mais baixa, as três cartas cabem com o título */
+  .fut-card__media{ aspect-ratio:auto; height:clamp(190px, 36vh, 340px); }
+  .fut-card__body{ padding:14px 20px 18px; }
+
+  /* depoimentos: o carrossel acompanha a altura da tela */
+  .depth{ --dc-h:clamp(300px, 52vh, 470px); --dc-w:calc(var(--dc-h) * .66); height:calc(var(--dc-h) + 36px); margin-top:0; }
+  .depth__hook{ margin-top:10px; }
+  .marquee{ margin-top:clamp(20px, 3.4vh, 40px); }
+
+  /* oferta: o que você leva à esquerda, preço e botão à direita (o preço fica na mesma altura do título) */
+  .oferta{
+    max-width:1000px; display:grid; grid-template-columns:minmax(0, 1.05fr) minmax(0, 1fr); align-items:center;
+    padding:clamp(28px, 5vh, 56px) clamp(32px, 4vw, 56px); text-align:left;
+  }
+  .oferta__info{ display:flex; flex-direction:column; align-items:flex-start; padding-right:clamp(28px, 3.6vw, 52px); }
+  .oferta__info .tag--c{ justify-content:flex-start; }
+  .oferta__sub{ margin:8px 0 22px; }
+  .oferta__checks{ margin-bottom:0; }
+  .oferta__buy{ display:flex; flex-direction:column; align-items:center; text-align:center; padding-left:clamp(28px, 3.6vw, 52px); border-left:1px solid var(--line); }
+  .preco{ margin-bottom:18px; }
+  .garantia{ margin-top:20px; padding-top:18px; }
+
+  /* faq */
+  .faq{ margin-top:clamp(22px, 4vh, 40px); }
+  .faq summary{ min-height:52px; padding-block:12px; }
 }
 
 /* ---------- telas bem estreitas (320px) ---------- */

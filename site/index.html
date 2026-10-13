@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap"></noscript>
 <link rel="preload" as="image" href="assets/illan-hero-pessoa-hd.webp" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=28">
+<link rel="stylesheet" href="css/style.css?v=31">
 </head>
 <body>
 
@@ -49,7 +49,7 @@
       <a href="#depoimentos">Depoimentos</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <a class="btn btn--sm js-cta header__cta" href="#oferta">Entrar no curso</a>
+    <a class="btn btn--sm header__cta" href="https://dashboard.kiwify.com.br/login" target="_blank" rel="noopener">Entrar no curso</a>
     <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
       <span></span><span></span><span></span>
     </button>
@@ -431,30 +431,34 @@
   <div class="beams beams--soft" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="wrap">
     <div class="oferta">
-      <p class="tag tag--c"><span class="tag__pill">Oferta</span><span class="tag__txt">acesso completo</span></p>
-      <h2 class="oferta__title" id="oferta-title" data-letters>Illan <span class="hl">Evolution</span></h2>
-      <p class="oferta__sub">O curso completo de EA FC 27 do Coach Illan</p>
-      <ul class="checks oferta__checks">
-        <li>22 aulas em 5 níveis + 3 capítulos sobre o FC 27</li>
-        <li>Extras: Weekend League e Rivals sem estresse</li>
-        <li>Plano de 4 semanas, diário de partidas e checklist</li>
-        <li>Guia oficial do aluno em PDF</li>
-        <li>Acesso por <mark class="fill">[PREENCHER: tempo de acesso]</mark></li>
-      </ul>
-      <div class="preco">
-        <p class="preco__por">R$ 229,90</p>
+      <div class="oferta__info">
+        <p class="tag tag--c"><span class="tag__pill">Oferta</span><span class="tag__txt">acesso completo</span></p>
+        <h2 class="oferta__title" id="oferta-title" data-letters>Illan <span class="hl">Evolution</span></h2>
+        <p class="oferta__sub">O curso completo de EA FC 27 do Coach Illan</p>
+        <ul class="checks oferta__checks">
+          <li>22 aulas em 5 níveis + 3 capítulos sobre o FC 27</li>
+          <li>Extras: Weekend League e Rivals sem estresse</li>
+          <li>Plano de 4 semanas, diário de partidas e checklist</li>
+          <li>Guia oficial do aluno em PDF</li>
+          <li>Acesso por <mark class="fill">[PREENCHER: tempo de acesso]</mark></li>
+        </ul>
       </div>
-      <!-- CONFIRMAR COM O CLIENTE: enquanto CHECKOUT_URL (js/main.js) estiver vazio, este botão aponta pra própria seção -->
-      <a class="btn btn--xl js-cta" href="#oferta">Entrar no Illan Evolution</a>
-      <ul class="selos">
-        <li><svg aria-hidden="true"><use href="#i-lock"/></svg>Pagamento seguro</li>
-        <li><svg aria-hidden="true"><use href="#i-bolt"/></svg>Acesso imediato</li>
-      </ul>
-      <div class="garantia">
-        <svg aria-hidden="true"><use href="#i-shield"/></svg>
-        <div>
-          <h3>Garantia de 7 dias</h3>
-          <p>Entrou, assistiu e achou que não é pra você? Pede o reembolso dentro do prazo e recebe o valor de volta. <mark class="fill">[PREENCHER: confirmar regra da garantia]</mark></p>
+      <div class="oferta__buy">
+        <div class="preco">
+          <p class="preco__por">R$ 229,90</p>
+        </div>
+        <!-- CONFIRMAR COM O CLIENTE: enquanto CHECKOUT_URL (js/main.js) estiver vazio, este botão aponta pra própria seção -->
+        <a class="btn btn--xl js-cta" href="#oferta">Entrar no Illan Evolution</a>
+        <ul class="selos">
+          <li><svg aria-hidden="true"><use href="#i-lock"/></svg>Pagamento seguro</li>
+          <li><svg aria-hidden="true"><use href="#i-bolt"/></svg>Acesso imediato</li>
+        </ul>
+        <div class="garantia">
+          <svg aria-hidden="true"><use href="#i-shield"/></svg>
+          <div>
+            <h3>Garantia de 7 dias</h3>
+            <p>Entrou, assistiu e achou que não é pra você? Pede o reembolso dentro do prazo e recebe o valor de volta. <mark class="fill">[PREENCHER: confirmar regra da garantia]</mark></p>
+          </div>
         </div>
       </div>
     </div>
@@ -546,6 +550,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js" defer></script>
-<script src="js/main.js?v=23" defer></script>
+<script src="js/main.js?v=24" defer></script>
 </body>
 </html>
