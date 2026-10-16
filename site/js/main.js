@@ -407,8 +407,8 @@ addEventListener('DOMContentLoaded', () => {
   gsap.registerPlugin(ScrollTrigger, ...(hasSplit ? [SplitText] : []));
   const mm = gsap.matchMedia();
 
-  mm.add({ motion: '(prefers-reduced-motion: no-preference)', desk: '(min-width: 960px)', side: '(min-width: 800px)', wide: '(min-width: 1000px)' }, ctx => {
-    const { motion, desk, side, wide } = ctx.conditions;
+  mm.add({ motion: '(prefers-reduced-motion: no-preference)', desk: '(min-width: 960px)', side: '(min-width: 800px)' }, ctx => {
+    const { motion, desk, side } = ctx.conditions;
     if (!motion) return;
     const reveal = (targets, from, opts = {}) => ScrollTrigger.batch(targets, {
       start: 'top 88%', once: true,
@@ -494,28 +494,18 @@ addEventListener('DOMContentLoaded', () => {
     /* aulas: capa entra com leve giro, níveis em cascata */
     gsap.from('.capa', { rotate: -6, y: 60, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.capa', start: 'top 85%', once: true } });
 
-    /* plano: linha do tempo. A linha enche com o scroll; o ponto de cada semana acende quando a ponta
-       da linha chega nele. Até 999px a linha é vertical (marca de 60% da tela); no desktop as 4 semanas
-       ficam lado a lado e a linha enche pro lado enquanto a seção atravessa a tela. */
+    /* plano: linha do tempo. A linha enche com o scroll; o ponto de cada semana
+       acende quando a ponta da linha chega nele (os dois usam a marca de 60% da tela). */
     const plano = $('.plano');
     plano.classList.add('is-anim');
-    const semanas = $$('.semana');
-    gsap.fromTo('.plano__bar i', wide ? { scaleX: 0 } : { scaleY: 0 }, {
-      ...(wide ? { scaleX: 1 } : { scaleY: 1 }), ease: 'none',
-      scrollTrigger: wide
-        ? {
-          trigger: '.plano-wrap', start: 'top 75%', end: 'bottom 45%', scrub: .3,
-          // semana k acende quando a linha passa do ponto dela (0, 1/3, 2/3, 1 do comprimento)
-          onUpdate: st => semanas.forEach((s, k) => {
-            const on = st.progress >= k / (semanas.length - 1) - .001 && st.progress > 0;
-            if (on !== s.classList.contains('is-on')) { s.classList.toggle('is-on', on); ativar(); }
-          }),
-        }
-        : { trigger: '.plano__bar', start: 'top 60%', end: 'bottom 60%', scrub: .3 },
+    gsap.fromTo('.plano__bar i', { scaleY: 0 }, {
+      scaleY: 1, ease: 'none',
+      scrollTrigger: { trigger: '.plano__bar', start: 'top 60%', end: 'bottom 60%', scrub: .3 },
     });
     // semana ativa = a última que a linha alcançou: o card dela cresce e flutua; ao trocar, o efeito passa adiante
+    const semanas = $$('.semana');
     let ativa = null, boia = null;
-    function ativar() {
+    const ativar = () => {
       const nova = semanas.filter(s => s.classList.contains('is-on')).pop() || null;
       if (nova === ativa) return;
       if (ativa) {
@@ -529,24 +519,23 @@ addEventListener('DOMContentLoaded', () => {
       const card = $('.semana__card', ativa);
       gsap.to(card, { scale: 1.04, duration: .5, ease: 'power2.out', overwrite: 'auto' });
       boia = gsap.to(card, { y: -8, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: .2 });
-    }
-    semanas.forEach((s, k) => {
-      if (!wide) ScrollTrigger.create({
+    };
+    semanas.forEach(s => {
+      ScrollTrigger.create({
         trigger: $('.semana__dot', s), start: 'center 60%',
         onEnter: () => { s.classList.add('is-on'); ativar(); },
         onLeaveBack: () => { s.classList.remove('is-on'); ativar(); },
       });
-      // tablet: título chega da esquerda e o card da direita; celular e desktop (colunas): sobem em cascata
-      const lado = side && !wide;
-      gsap.timeline({ scrollTrigger: { trigger: s, start: 'top 82%', once: true }, delay: wide ? k * .1 : 0 })
-        .from($('.semana__head', s), lado ? { x: -48, opacity: 0, duration: .8 } : { y: 28, opacity: 0, duration: .7 })
-        .from($('.semana__card', s), lado ? { x: 48, opacity: 0, duration: .8 } : { y: 28, opacity: 0, duration: .7 }, .12)
+      // título chega da esquerda e o card da direita; no celular os dois sobem
+      gsap.timeline({ scrollTrigger: { trigger: s, start: 'top 82%', once: true } })
+        .from($('.semana__head', s), side ? { x: -48, opacity: 0, duration: .8 } : { y: 28, opacity: 0, duration: .7 })
+        .from($('.semana__card', s), side ? { x: 48, opacity: 0, duration: .8 } : { y: 28, opacity: 0, duration: .7 }, .12)
         .from($('.semana__dot', s), { opacity: 0, duration: .4 }, 0);
     });
     ctx.add(() => () => {
       boia && boia.kill();
       plano.classList.remove('is-anim');
-      semanas.forEach(s => s.classList.remove('is-active', 'is-on'));
+      semanas.forEach(s => s.classList.remove('is-active'));
       gsap.set($$('.semana__card'), { clearProps: 'transform' });
     });
 
