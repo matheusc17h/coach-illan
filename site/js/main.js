@@ -429,8 +429,8 @@ addEventListener('DOMContentLoaded', () => {
   ScrollTrigger.config({ ignoreMobileResize: true });
   const mm = gsap.matchMedia();
 
-  mm.add({ motion: '(prefers-reduced-motion: no-preference)', desk: '(min-width: 960px)', side: '(min-width: 800px)', hover: '(hover: hover) and (min-width: 700px)' }, ctx => {
-    const { motion, desk, side, hover } = ctx.conditions;
+  mm.add({ motion: '(prefers-reduced-motion: no-preference)', desk: '(min-width: 960px)', side: '(min-width: 800px)', hover: '(hover: hover) and (min-width: 700px)', cols: '(min-width: 1000px)' }, ctx => {
+    const { motion, desk, side, hover, cols } = ctx.conditions;
     if (!motion) return;
     const reveal = (targets, from, opts = {}) => ScrollTrigger.batch(targets, {
       start: 'top 88%', once: true,
@@ -516,11 +516,36 @@ addEventListener('DOMContentLoaded', () => {
        pessoa chega. Só fica o movimento que conta algo do mundo do Illan: o post do título caindo
        sobre a foto, a capa do guia, a linha do tempo do plano e a carta de FUT virando. */
 
+    /* sobre: as duas colunas chegam de lados opostos e param onde se encontram:
+       foto + post vêm da esquerda, texto vem da direita (a seção tem overflow:hidden, sem rolagem lateral) */
+    const lado = side ? 140 : 60;
+    gsap.timeline({ scrollTrigger: { trigger: '.about', start: 'top 75%', once: true }, defaults: { duration: 1.1, ease: 'power3.out' } })
+      .from('.about__media', { x: -lado, opacity: 0 }, 0)
+      .from('.about__text', { x: lado, opacity: 0 }, .1);
+
     /* sobre: o post do título 'cai' sobre a foto conforme a colagem entra na tela */
     gsap.fromTo('.post', { rotate: 8, y: 80, x: 20 }, { rotate: -3, y: 0, x: 0, ease: 'none', scrollTrigger: { trigger: '.about__media', start: 'top 90%', end: 'center 55%', scrub: true } });
 
-    /* aulas: capa entra com leve giro, níveis em cascata */
-    gsap.from('.capa', { rotate: -6, y: 60, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.capa', start: 'top 85%', once: true } });
+    /* prova rápida: os balões de WhatsApp começam invisíveis e sobem um de cada vez ao chegar na tela */
+    prep('.quotes__list li', { opacity: 0, y: 50 });
+    reveal('.quotes__list li', { opacity: 0, y: 50 }, { stagger: .25, duration: .8, ease: 'power3.out' });
+
+    /* aulas: entra por etapas, uma depois da outra: texto → capa → itens da lista um a um →
+       níveis um a um → botão. Com duas colunas é uma sequência só; no celular (empilhado)
+       cada etapa espera chegar na tela, pra nada animar fora da vista. */
+    const passosAulas = [
+      ['#aulas .lead', { y: 24, opacity: 0, duration: .6 }],
+      ['.capa', { rotate: -6, y: 60, opacity: 0, duration: .9 }],
+      ['#aulas .checks li', { x: -28, opacity: 0, duration: .5, stagger: .12 }],
+      ['#aulas .nivel', { x: 48, opacity: 0, duration: .55, stagger: .12 }],
+      ['#aulas .niveis .cta', { y: 24, opacity: 0, duration: .6 }],
+    ];
+    if (cols) {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: '.produto', start: 'top 70%', once: true }, defaults: { ease: 'power3.out' } });
+      passosAulas.forEach(([alvo, de], i) => tl.from(alvo, de, i ? '-=.25' : 0));
+    } else {
+      passosAulas.forEach(([alvo, de]) => gsap.from(alvo, { ...de, ease: 'power3.out', scrollTrigger: { trigger: alvo, start: 'top 88%', once: true } }));
+    }
 
     /* plano: linha do tempo. A linha enche com o scroll; o ponto de cada semana
        acende quando a ponta da linha chega nele (os dois usam a marca de 60% da tela). */
