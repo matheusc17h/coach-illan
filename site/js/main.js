@@ -5,6 +5,10 @@
 // Todos os CTAs de compra usam esta URL. Enquanto estiver vazia, os botões levam à seção de oferta.
 const CHECKOUT_URL = ''; // [PREENCHER: URL do checkout]
 
+// Pixel do Meta (só números, ex.: '123456789012345'). Vazio = nenhum pixel carrega.
+// A compra (Purchase) quem dispara é a Kiwify: conecte o mesmo pixel no produto lá.
+const META_PIXEL_ID = ''; // [PREENCHER: ID do pixel do Meta]
+
 // Jogadores de campeonato que já tiveram o Illan como coach. Troque foto e texto só aqui.
 // foto: PNG/WebP com fundo transparente dentro de site/ (ex.: 'assets/jogadores/nick.webp'). Vazio = silhueta.
 // pos: posição horizontal do recorte da foto (0% = esquerda). retrato: true pra foto em pé (mostra da cabeça ao peito). inteira: true pra foto pequena de meio corpo (aparece inteira, sem zoom). titulos: um por linha.
@@ -40,6 +44,22 @@ const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
 /* ---------- CTAs → checkout ---------- */
 if (CHECKOUT_URL) $$('.js-cta').forEach(a => { a.href = CHECKOUT_URL; });
+
+/* ---------- pixel do Meta ----------
+   PageView na visita; CliqueCompra em qualquer botão de compra; AreaDoAluno no link de login.
+   Quem dispara AreaDoAluno quase sempre já é aluno: use esse público como exclusão nas campanhas.
+   (CliqueCompra é evento próprio pra não duplicar o InitiateCheckout que a Kiwify já dispara no checkout.) */
+if (META_PIXEL_ID) {
+  !function (f, b, e, v, n, t, s) {
+    if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+    if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+    t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+  }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', META_PIXEL_ID);
+  fbq('track', 'PageView');
+  $$('.js-cta').forEach(a => a.addEventListener('click', () => fbq('trackCustom', 'CliqueCompra', { botao: a.textContent.trim() })));
+  $$('.js-aluno').forEach(a => a.addEventListener('click', () => fbq('trackCustom', 'AreaDoAluno')));
+}
 
 /* ---------- ano no rodapé ---------- */
 $('#ano').textContent = new Date().getFullYear();
@@ -567,10 +587,10 @@ addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    /* jogadores: a carta vira como revelação de pack */
-    // gira o <li> (não a carta) pra não brigar com o tilt do mouse, que usa o transform da carta
-    prep('.fut > li', { opacity: 0, rotateY: -70, y: 30, transformPerspective: 900 });
-    reveal('.fut > li', { opacity: 0, rotateY: -70, y: 30 }, { stagger: .1, duration: 1, ease: 'back.out(1.4)' });
+    /* jogadores: as cartas sobem de baixo pra cima, uma de cada vez, cada uma no seu tempo */
+    // anima o <li> (não a carta) pra não brigar com o tilt do mouse, que usa o transform da carta
+    prep('.fut > li', { opacity: 0, y: 90 });
+    reveal('.fut > li', { opacity: 0, y: 90 }, { stagger: .22, duration: .9, ease: 'power3.out' });
 
     /* oferta: card cresce ao entrar, brilho aumenta */
     // só escala: o card da oferta nunca aparece apagado

@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Outfit:wght@300;600;800&display=swap"></noscript>
 <link rel="preload" as="image" href="assets/illan-hero-pessoa-hd.webp?v=3" fetchpriority="high">
-<link rel="stylesheet" href="css/style.css?v=35">
+<link rel="stylesheet" href="css/style.css?v=38">
 </head>
 <body>
 
@@ -48,8 +48,11 @@
       <a href="#alunos">Alunos</a>
       <a href="#depoimentos">Depoimentos</a>
       <a href="#faq">FAQ</a>
+      <a class="nav__aluno js-aluno" href="https://dashboard.kiwify.com.br/login" target="_blank" rel="noopener">Área do aluno</a>
     </nav>
-    <a class="btn btn--sm header__cta" href="https://dashboard.kiwify.com.br/login" target="_blank" rel="noopener">Entrar no curso</a>
+    <!-- quem já comprou faz login na Kiwify; o botão vermelho é só pra compra (vale pro tráfego pago) -->
+    <a class="header__aluno js-aluno" href="https://dashboard.kiwify.com.br/login" target="_blank" rel="noopener">Área do aluno</a>
+    <a class="btn btn--sm header__cta js-cta" href="#oferta">Quero o curso</a>
     <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
       <span></span><span></span><span></span>
     </button>
@@ -126,15 +129,15 @@
     <h2 class="h2 h2--c" id="pv-title" data-letters="top 60%">Esse curso é <span class="hl">pra você que:</span></h2>
     <ul class="pv">
       <li class="pv__card">
-        <div class="pv__img"><img src="assets/card-tilt.png?v=2" width="600" height="750" loading="lazy" decoding="async" alt="Jogador irritado, com a mão no cabelo e o controle apertado na outra mão, depois de tomar um gol."></div>
+        <div class="pv__img"><img src="assets/card-tilt.png?v=4" width="600" height="750" loading="lazy" decoding="async" alt="Jogador furioso gritando com a tela, com o controle nas duas mãos, depois de tomar um gol."></div>
         <p>Tilta depois de um gol, <span class="hl">entrega o segundo</span> e fecha a Weekend League com raiva.</p>
       </li>
       <li class="pv__card">
-        <div class="pv__img"><img src="assets/card-ultimos-minutos.png?v=2" width="600" height="750" loading="lazy" decoding="async" alt="Jogador em choque olhando para a tela, boca entreaberta, controle abaixado."></div>
+        <div class="pv__img"><img src="assets/card-ultimos-minutos.png?v=3" width="600" height="750" loading="lazy" decoding="async" alt="Jogador em choque olhando para a tela, boca entreaberta, controle abaixado."></div>
         <p>Toma gol nos últimos 10 minutos de jogo que <span class="hl">estava ganhando</span>, e não sabe por quê.</p>
       </li>
       <li class="pv__card">
-        <div class="pv__img"><img src="assets/card-manual.png?v=2" width="600" height="750" loading="lazy" decoding="async" alt="Jogador calmo e concentrado, inclinado para a frente com as duas mãos no controle."></div>
+        <div class="pv__img"><img src="assets/card-manual.png?v=3" width="600" height="750" loading="lazy" decoding="async" alt="Jogador calmo e concentrado, inclinado para a frente com as duas mãos no controle."></div>
         <p>Quer subir no Rivals <span class="hl">sem precisar de time caro</span>, defendendo no manual.</p>
       </li>
     </ul>
@@ -377,7 +380,7 @@
 <section class="sec" id="alunos" aria-labelledby="alunos-title">
   <div class="wrap">
     <div class="sec__head sec__head--c">
-      <h2 class="h2" id="alunos-title" data-letters>Quem joga <span class="hl">com o Illan</span></h2>
+      <h2 class="h2" id="alunos-title" data-letters>Quem joga <span class="hl">com o Illan?</span></h2>
       <p class="lead">Jogador de campeonato que já teve o Illan como coach. Se o método segura quem disputa título, imagina o que faz pela sua Weekend League.</p>
     </div>
     <ul class="fut" id="fut-grid"><!-- preenchido pelo array players em js/main.js --></ul>
@@ -528,6 +531,7 @@
     <a class="logo" href="#topo" aria-label="Illan Evolution, voltar ao topo"><span class="logo__a">Illan</span><span class="logo__b">Evolution</span></a>
     <ul class="footer__links">
       <li><a href="https://www.instagram.com/coach__illan/" rel="noopener" target="_blank" aria-label="Instagram do Coach Illan (@coach__illan)">Instagram</a></li>
+      <li><a class="js-aluno" href="https://dashboard.kiwify.com.br/login" rel="noopener" target="_blank">Área do aluno</a></li>
     </ul>
     <p class="legal">EA SPORTS FC é marca registrada da Electronic Arts Inc. Este curso é independente e não possui afiliação, patrocínio ou endosso da Electronic Arts.</p>
     <p class="legal">© <span id="ano">2026</span> Illan Evolution · Coach Illan</p>
@@ -553,6 +557,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js" defer></script>
-<script src="js/main.js?v=27" defer></script>
+<script src="js/main.js?v=29" defer></script>
 </body>
 </html>
