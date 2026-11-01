@@ -397,8 +397,13 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 /* colagem: foto do Illan + post do título sobreposto no canto */
 .about__media{ position:relative; width:min(100%, 460px); margin-inline:auto; padding-bottom:18%; }
 .about__photo{ position:relative; width:86%; }
-.about__glow{ position:absolute; inset:8% -6% 0; border-radius:50%; background:radial-gradient(closest-side, rgba(255,36,52,.6), rgba(120,8,20,.3) 55%, transparent 75%); filter:blur(16px); }
-.about__photo img{ position:relative; width:100%; -webkit-mask-image:linear-gradient(#000 72%, transparent 98%); mask-image:linear-gradient(#000 72%, transparent 98%); }
+/* atrás da foto, um card no estilo da capa do guia (mesmo vidro vermelho estilhaçado); a cabeça sai por cima dele */
+.about__photo::before{
+  content:""; position:absolute; inset:22% 4% 0; border-radius:var(--r-lg);
+  background:linear-gradient(180deg, rgba(10,2,3,.35), rgba(10,2,3,.8) 85%), url("../assets/background-1.webp") center/cover, #0a0203;
+  border:1px solid var(--line-r); box-shadow:var(--glow), 0 30px 60px -20px rgba(0,0,0,.8);
+}
+.about__photo img{ position:relative; width:100%; -webkit-mask-image:linear-gradient(#000 80%, transparent 100%); mask-image:linear-gradient(#000 80%, transparent 100%); }
 .post{ position:absolute; right:0; bottom:0; width:48%; transform:rotate(-3deg); z-index:2; will-change:transform; }
 .post img{ width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:var(--r-sm); box-shadow:0 24px 50px -10px rgba(0,0,0,.8); }
 .post figcaption{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; margin-top:10px; font-size:.75rem; color:var(--txt-2); }

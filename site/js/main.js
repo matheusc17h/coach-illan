@@ -504,6 +504,17 @@ addEventListener('DOMContentLoaded', () => {
         scrollTrigger: { trigger: '.strip', start: 'top 92%', once: true } });
     });
 
+    /* pra quem é: o card grande vem da esquerda, os dois da direita vêm da direita (um depois do outro)
+       e todos param onde já estão. No celular (uma coluna) cada card entra quando chega na tela. */
+    const pvCards = $$('.pv__card');
+    const pvDe = (card, i, dist) => ({ x: i === 0 ? -dist : dist, opacity: 0 });
+    if (matchMedia('(min-width: 700px)').matches) {
+      const tl = gsap.timeline({ scrollTrigger: { trigger: '.pv', start: 'top 75%', once: true }, defaults: { duration: 1, ease: 'power3.out' } });
+      pvCards.forEach((card, i) => tl.from(card, pvDe(card, i, 140), i === 0 ? 0 : .15 + (i - 1) * .2));
+    } else {
+      pvCards.forEach((card, i) => gsap.from(card, { ...pvDe(card, i, 60), duration: .9, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 88%', once: true } }));
+    }
+
     /* Daqui pra baixo, nada de "sobe e aparece" genérico em todo bloco: o texto já está lá quando a
        pessoa chega. Só fica o movimento que conta algo do mundo do Illan: o post do título caindo
        sobre a foto, a capa do guia, a linha do tempo do plano e a carta de FUT virando. */
@@ -543,12 +554,25 @@ addEventListener('DOMContentLoaded', () => {
        acende quando a ponta da linha chega nele (os dois usam a marca de 60% da tela). */
     const plano = $('.plano');
     plano.classList.add('is-anim');
-    gsap.fromTo('.plano__bar i', { scaleY: 0 }, {
-      scaleY: 1, ease: 'none',
+    const semanas = $$('.semana');
+    // cada ponto acende quando a ponta vermelha da linha (o que está desenhado na tela) passa por ele
+    const barra = $('.plano__bar i');
+    const acender = () => {
+      const r = barra.parentElement.getBoundingClientRect();
+      const ponta = r.top + r.height * gsap.getProperty(barra, 'scaleY');
+      let mudou = false;
+      semanas.forEach(s => {
+        const d = $('.semana__dot', s).getBoundingClientRect();
+        const on = d.top + d.height / 2 <= ponta + 1;
+        if (on !== s.classList.contains('is-on')) { s.classList.toggle('is-on', on); mudou = true; }
+      });
+      if (mudou) ativar();
+    };
+    gsap.fromTo(barra, { scaleY: 0 }, {
+      scaleY: 1, ease: 'none', onUpdate: acender,
       scrollTrigger: { trigger: '.plano__bar', start: 'top 60%', end: 'bottom 60%', scrub: .3 },
     });
     // semana ativa = a última que a linha alcançou: o card dela cresce e flutua; ao trocar, o efeito passa adiante
-    const semanas = $$('.semana');
     let ativa = null, boia = null, planoNaTela = true;
     // a flutuação do card ativo só roda com o plano na tela
     const planoIo = new IntersectionObserver(([e]) => { planoNaTela = e.isIntersecting; boia && (planoNaTela ? boia.resume() : boia.pause()); });
@@ -570,11 +594,6 @@ addEventListener('DOMContentLoaded', () => {
       if (!planoNaTela) boia.pause();
     };
     semanas.forEach(s => {
-      ScrollTrigger.create({
-        trigger: $('.semana__dot', s), start: 'center 60%',
-        onEnter: () => { s.classList.add('is-on'); ativar(); },
-        onLeaveBack: () => { s.classList.remove('is-on'); ativar(); },
-      });
       // título chega da esquerda e o card da direita; no celular os dois sobem
       gsap.timeline({ scrollTrigger: { trigger: s, start: 'top 82%', once: true } })
         .from($('.semana__head', s), side ? { x: -48, opacity: 0, duration: .8 } : { y: 28, opacity: 0, duration: .7 })
