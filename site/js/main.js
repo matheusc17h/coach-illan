@@ -409,8 +409,8 @@ addEventListener('DOMContentLoaded', () => {
   ScrollTrigger.config({ ignoreMobileResize: true });
   const mm = gsap.matchMedia();
 
-  mm.add({ motion: '(prefers-reduced-motion: no-preference)', desk: '(min-width: 960px)', side: '(min-width: 800px)' }, ctx => {
-    const { motion, desk, side } = ctx.conditions;
+  mm.add({ motion: '(prefers-reduced-motion: no-preference)', desk: '(min-width: 960px)', side: '(min-width: 800px)', hover: '(hover: hover) and (min-width: 700px)' }, ctx => {
+    const { motion, desk, side, hover } = ctx.conditions;
     if (!motion) return;
     const reveal = (targets, from, opts = {}) => ScrollTrigger.batch(targets, {
       start: 'top 88%', once: true,
@@ -550,6 +550,21 @@ addEventListener('DOMContentLoaded', () => {
       plano.classList.remove('is-anim');
       semanas.forEach(s => s.classList.remove('is-active'));
       gsap.set($$('.semana__card'), { clearProps: 'transform' });
+    });
+
+    /* pra quem é: no desktop com mouse, o card sobe e fica flutuando enquanto o mouse está em cima */
+    if (hover) $$('.pv__card').forEach(card => {
+      let boia = null;
+      card.addEventListener('mouseenter', () => {
+        boia && boia.kill();
+        boia = gsap.timeline()
+          .to(card, { y: -10, duration: .45, ease: 'power2.out' })
+          .to(card, { y: -16, duration: 1.4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+      });
+      card.addEventListener('mouseleave', () => {
+        boia && boia.kill();
+        boia = gsap.to(card, { y: 0, duration: .5, ease: 'power2.out' });
+      });
     });
 
     /* jogadores: a carta vira como revelação de pack */

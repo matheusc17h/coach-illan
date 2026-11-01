@@ -333,11 +333,16 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   .pv__card .pv__img img{ position:absolute; inset:0; }
   .pv__card:first-child .pv__img{ flex:1; aspect-ratio:auto; min-height:300px; }
   /* foto grande: menos zoom, do cabelo até o controle (o PNG é recortado, o fundo vermelho aparece dos lados) */
-  .pv__card:first-child .pv__img img{ inset:auto; top:-14%; left:50%; width:auto; height:170%; transform:translateX(-50%); object-fit:contain; }
+  .pv__card:first-child .pv__img img{ inset:auto; top:-2%; left:50%; width:auto; height:150%; transform:translateX(-50%); object-fit:contain; }
   .pv__card:first-child p{ font-size:1.1875rem; font-weight:600; }
   .pv__card:not(:first-child){ display:grid; grid-template-columns:42% minmax(0,1fr); align-items:center; border-radius:var(--r-md); }
   .pv__card:not(:first-child) .pv__img{ aspect-ratio:auto; height:100%; min-height:230px; }
   .pv__card p{ font-size:.9375rem; padding:18px; }
+}
+/* desktop com mouse: o card sobe e flutua (GSAP em js/main.js); aqui só o brilho acompanha */
+@media (hover:hover) and (min-width:700px){
+  .pv__card{ transition:box-shadow .4s var(--ease), border-color .4s var(--ease); }
+  .pv__card:hover{ border-color:rgba(255,58,76,.55); box-shadow:var(--glow), 0 28px 50px -20px rgba(0,0,0,.9); }
 }
 @media (min-width:1000px){
   .pv{ gap:24px; }
@@ -687,7 +692,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .footer{ background:#000; padding:40px 0 48px; }
 .footer__in{ display:grid; gap:18px; justify-items:start; }
 .footer__links{ display:flex; flex-wrap:wrap; gap:4px 24px; }
-.footer__links a{ display:inline-block; padding:10px 0; font-weight:600; font-size:.9375rem; text-underline-offset:4px; }
+.footer__links a{ display:inline-block; padding:10px 0; font-weight:600; font-size:.9375rem; text-decoration:none; transition:color .2s; }
 .footer__links a:hover{ color:var(--red); }
 .legal{ font-size:.8125rem; color:var(--txt-2); max-width:80ch; }
 @media (max-width:899px){ .footer{ padding-bottom:120px; } }
