@@ -364,19 +364,11 @@ if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
   });
 }
 
-/* ---------- marquee: botão de pausa ---------- */
+/* ---------- marquee: para fora da tela ---------- */
 {
   const m = $('.marquee');
-  const t = $('.marquee__toggle');
   // fora da tela a faixa para de andar: menos trabalho pro navegador durante a rolagem
   new IntersectionObserver(([e]) => m.classList.toggle('is-off', !e.isIntersecting)).observe(m);
-  t.addEventListener('click', () => {
-    const on = !m.classList.contains('is-paused');
-    m.classList.toggle('is-paused', on);
-    t.setAttribute('aria-pressed', String(on));
-    t.setAttribute('aria-label', on ? 'Tocar comentários' : 'Pausar comentários');
-    $('use', t).setAttribute('href', on ? '#i-play' : '#i-pause');
-  });
 }
 
 /* ---------- hero: fundo em vídeo ----------
