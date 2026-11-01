@@ -103,8 +103,6 @@ $('#ano').textContent = new Date().getFullYear();
       card.classList.add('is-tilting');
       card.style.setProperty('--ry', `${(x - .5) * 12}deg`);
       card.style.setProperty('--rx', `${(.5 - y) * 12}deg`);
-      card.style.setProperty('--gx', `${x * 100}%`);
-      card.style.setProperty('--gy', `${y * 100}%`);
     });
     card.addEventListener('pointerleave', () => {
       card.classList.remove('is-tilting');
@@ -350,6 +348,8 @@ if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
 {
   const m = $('.marquee');
   const t = $('.marquee__toggle');
+  // fora da tela a faixa para de andar: menos trabalho pro navegador durante a rolagem
+  new IntersectionObserver(([e]) => m.classList.toggle('is-off', !e.isIntersecting)).observe(m);
   t.addEventListener('click', () => {
     const on = !m.classList.contains('is-paused');
     m.classList.toggle('is-paused', on);
@@ -405,6 +405,8 @@ addEventListener('DOMContentLoaded', () => {
   if (!window.gsap || !window.ScrollTrigger) return;
   const hasSplit = !!window.SplitText;
   gsap.registerPlugin(ScrollTrigger, ...(hasSplit ? [SplitText] : []));
+  // no celular a barra de endereço some/aparece ao rolar: sem isso cada vez recalcula tudo e dá tranco
+  ScrollTrigger.config({ ignoreMobileResize: true });
   const mm = gsap.matchMedia();
 
   mm.add({ motion: '(prefers-reduced-motion: no-preference)', desk: '(min-width: 960px)', side: '(min-width: 800px)' }, ctx => {
@@ -442,13 +444,19 @@ addEventListener('DOMContentLoaded', () => {
         // Sobe no máx. 3% da altura da figura: o controle nunca chega na altura do rosto.
         const c = '.hero__controle', ease = 'sine.inOut', loop = { ease, yoyo: true, repeat: -1 };
         const sobe = $('.hero__figure').offsetHeight * .03;
-        gsap.to(c, { y: -sobe, duration: 1.8, ...loop });
-        gsap.to(c, { scale: .75, duration: 2.2, ...loop });
-        gsap.timeline().to(c, { rotation: -6, duration: 1.2, ease }).to(c, { rotation: 6, duration: 2.4, ...loop });
-        gsap.timeline().to(c, { x: -10, duration: 1.5, ease }).to(c, { x: 10, duration: 3, ...loop });
-        // volume 3D: gira em perspectiva nos dois eixos
-        gsap.timeline().to(c, { rotationY: -18, duration: 1.6, ease }).to(c, { rotationY: 18, duration: 3.2, ...loop });
-        gsap.timeline().to(c, { rotationX: 10, duration: 1.3, ease }).to(c, { rotationX: -10, duration: 2.6, ...loop });
+        const voo = [
+          gsap.to(c, { y: -sobe, duration: 1.8, ...loop }),
+          gsap.to(c, { scale: .75, duration: 2.2, ...loop }),
+          gsap.timeline().to(c, { rotation: -6, duration: 1.2, ease }).to(c, { rotation: 6, duration: 2.4, ...loop }),
+          gsap.timeline().to(c, { x: -10, duration: 1.5, ease }).to(c, { x: 10, duration: 3, ...loop }),
+          // volume 3D: gira em perspectiva nos dois eixos
+          gsap.timeline().to(c, { rotationY: -18, duration: 1.6, ease }).to(c, { rotationY: 18, duration: 3.2, ...loop }),
+          gsap.timeline().to(c, { rotationX: 10, duration: 1.3, ease }).to(c, { rotationX: -10, duration: 2.6, ...loop }),
+        ];
+        // com o hero fora da tela o controle para de flutuar (e retoma de onde parou ao voltar)
+        const io = new IntersectionObserver(([e]) => voo.forEach(t => e.isIntersecting ? t.resume() : t.pause()));
+        io.observe($('.hero'));
+        return () => io.disconnect();
       }));
 
     /* controle: no desktop, inclina em 3D na direção do mouse (no wrap, pra não brigar com a flutuação) */
@@ -504,7 +512,10 @@ addEventListener('DOMContentLoaded', () => {
     });
     // semana ativa = a última que a linha alcançou: o card dela cresce e flutua; ao trocar, o efeito passa adiante
     const semanas = $$('.semana');
-    let ativa = null, boia = null;
+    let ativa = null, boia = null, planoNaTela = true;
+    // a flutuação do card ativo só roda com o plano na tela
+    const planoIo = new IntersectionObserver(([e]) => { planoNaTela = e.isIntersecting; boia && (planoNaTela ? boia.resume() : boia.pause()); });
+    planoIo.observe(plano);
     const ativar = () => {
       const nova = semanas.filter(s => s.classList.contains('is-on')).pop() || null;
       if (nova === ativa) return;
@@ -519,6 +530,7 @@ addEventListener('DOMContentLoaded', () => {
       const card = $('.semana__card', ativa);
       gsap.to(card, { scale: 1.04, duration: .5, ease: 'power2.out', overwrite: 'auto' });
       boia = gsap.to(card, { y: -8, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: .2 });
+      if (!planoNaTela) boia.pause();
     };
     semanas.forEach(s => {
       ScrollTrigger.create({
@@ -533,6 +545,7 @@ addEventListener('DOMContentLoaded', () => {
         .from($('.semana__dot', s), { opacity: 0, duration: .4 }, 0);
     });
     ctx.add(() => () => {
+      planoIo.disconnect();
       boia && boia.kill();
       plano.classList.remove('is-anim');
       semanas.forEach(s => s.classList.remove('is-active'));

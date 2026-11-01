@@ -163,10 +163,11 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
    ========================================================= */
 .header{
   position:fixed; inset:0 0 auto; z-index:100; height:var(--header-h);
-  transition:background-color .25s, border-color .25s, backdrop-filter .25s;
+  transition:background-color .25s, border-color .25s;
   border-bottom:1px solid transparent;
 }
-.header.is-scrolled{ background:rgba(6,2,3,.86); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom-color:var(--line); }
+/* sem backdrop-filter: num elemento fixo ele refaz o desfoque a cada quadro da rolagem */
+.header.is-scrolled{ background:rgba(6,2,3,.95); border-bottom-color:var(--line); }
 .header__in{ height:100%; width:min(100% - var(--gutter) * 2, 1320px); margin-inline:auto; display:flex; align-items:center; gap:12px; }
 .header .logo{ margin-right:auto; }
 .header__cta{ display:none; }
@@ -180,7 +181,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   .nav.is-open{
     display:flex; flex-direction:column; position:fixed; top:var(--header-h); left:0; right:0;
     max-height:calc(100svh - var(--header-h)); overflow-y:auto;
-    background:rgba(6,2,3,.97); backdrop-filter:blur(12px); border-bottom:1px solid var(--line-r);
+    background:rgba(6,2,3,.98); border-bottom:1px solid var(--line-r);
     padding:8px var(--gutter) 20px;
   }
   .nav.is-open a{ padding:16px 4px; border-bottom:1px solid var(--line); text-decoration:none; font-weight:600; font-size:1.0625rem; }
@@ -234,7 +235,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .hero__media{ position:relative; display:flex; justify-content:center; align-items:flex-end; min-height:440px; margin-top:16px; }
 .hero__glow{ position:absolute; left:50%; bottom:6%; width:min(92%, 520px); aspect-ratio:1; transform:translateX(-50%); border-radius:50%; background:radial-gradient(closest-side, rgba(255,36,52,.55), rgba(140,10,24,.25) 55%, transparent 72%); filter:blur(10px); }
 .hero__img{
-  position:relative; width:auto; height:min(62svh, 520px); max-width:100%; object-fit:contain; object-position:bottom;
+  position:relative; width:auto; height:min(62svh, 520px); max-width:100%; object-fit:contain; object-position:bottom; will-change:transform;
   -webkit-mask-image:linear-gradient(180deg, #000 78%, transparent 100%); mask-image:linear-gradient(180deg, #000 78%, transparent 100%);
 }
 /* duas camadas no mesmo quadro: a pessoa embaixo, o controle por cima, alinhados pelo mesmo canvas */
@@ -247,8 +248,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .float{
   position:absolute; z-index:2; display:flex; align-items:flex-start; gap:10px;
   max-width:230px; padding:10px 14px 10px 10px; border-radius:var(--r-sm);
-  background:rgba(22,8,10,.78); border:1px solid rgba(255,255,255,.1);
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  background:rgba(22,8,10,.92); border:1px solid rgba(255,255,255,.1);
+  will-change:transform;
   box-shadow:0 12px 30px rgba(0,0,0,.45);
   font-size:.75rem; line-height:1.35;
 }
@@ -331,6 +332,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   .pv__card .pv__img{ position:relative; }
   .pv__card .pv__img img{ position:absolute; inset:0; }
   .pv__card:first-child .pv__img{ flex:1; aspect-ratio:auto; min-height:300px; }
+  /* foto grande: menos zoom, do cabelo até o controle (o PNG é recortado, o fundo vermelho aparece dos lados) */
+  .pv__card:first-child .pv__img img{ inset:auto; top:-14%; left:50%; width:auto; height:170%; transform:translateX(-50%); object-fit:contain; }
   .pv__card:first-child p{ font-size:1.1875rem; font-weight:600; }
   .pv__card:not(:first-child){ display:grid; grid-template-columns:42% minmax(0,1fr); align-items:center; border-radius:var(--r-md); }
   .pv__card:not(:first-child) .pv__img{ aspect-ratio:auto; height:100%; min-height:230px; }
@@ -361,7 +364,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .sec--glass::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, var(--bg) 0%, transparent 18%, transparent 82%, var(--bg) 100%); }
 .sec--glass > .wrap{ position:relative; z-index:1; }
 /* as mudanças lidas como patch notes: uma linha por mudança, sem caixas */
-.mudancas{ padding:0 20px; border-radius:var(--r-md); border-top:2px solid var(--red); background:rgba(8,3,4,.82); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+.mudancas{ padding:0 20px; border-radius:var(--r-md); border-top:2px solid var(--red); background:rgba(8,3,4,.92); }
 .mudancas > li{ padding:22px 0 24px; }
 .mudancas > li + li{ border-top:1px solid var(--line); }
 .mudancas h3{ font-family:var(--f-title); font-weight:600; font-size:1.25rem; line-height:1.2; margin-bottom:12px; }
@@ -386,7 +389,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .about__photo{ position:relative; width:86%; }
 .about__glow{ position:absolute; inset:8% -6% 0; border-radius:50%; background:radial-gradient(closest-side, rgba(255,36,52,.6), rgba(120,8,20,.3) 55%, transparent 75%); filter:blur(16px); }
 .about__photo img{ position:relative; width:100%; -webkit-mask-image:linear-gradient(#000 72%, transparent 98%); mask-image:linear-gradient(#000 72%, transparent 98%); }
-.post{ position:absolute; right:0; bottom:0; width:48%; transform:rotate(-3deg); z-index:2; }
+.post{ position:absolute; right:0; bottom:0; width:48%; transform:rotate(-3deg); z-index:2; will-change:transform; }
 .post img{ width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:var(--r-sm); box-shadow:0 24px 50px -10px rgba(0,0,0,.8); }
 .post figcaption{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; margin-top:10px; font-size:.75rem; color:var(--txt-2); }
 .post__selo{ background:var(--trophy); color:var(--trophy-ink); font-weight:800; font-size:.75rem; padding:4px 10px; border-radius:999px; }
@@ -541,7 +544,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .fut{ display:grid; gap:16px; max-width:400px; margin-inline:auto; }
 .fut > li{ perspective:900px; }
 .fut-card{
-  --rx:0deg; --ry:0deg; --gx:50%; --gy:30%;
+  --rx:0deg; --ry:0deg;
   position:relative; height:100%; display:flex; flex-direction:column;
   overflow:hidden; isolation:isolate; border-radius:var(--r-lg);
   background:var(--card); border:1px solid var(--line-r);
@@ -558,8 +561,6 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .fut-card__ph svg{ position:absolute; left:50%; bottom:0; width:52%; transform:translateX(-50%); color:#050102; opacity:.9; }
 /* informações embaixo da foto */
 .fut-card__body{ flex:1; display:flex; flex-direction:column; align-items:flex-start; padding:16px 20px 20px; }
-.fut-card::after{ content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .25s; background:radial-gradient(circle at var(--gx) var(--gy), rgba(255,255,255,.18), transparent 45%); }
-.fut-card:hover::after{ opacity:1; }
 .fut-card__nick{ font-family:var(--f-title); font-weight:800; font-size:1.25rem; line-height:1.15; word-break:break-word; }
 .fut-card__info{ font-size:.8125rem; color:var(--txt-2); margin-top:8px; display:grid; gap:3px; }
 .fut-card__info li{ position:relative; padding-left:14px; }
@@ -608,6 +609,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .marquee__toggle{ margin:8px; }
 .marquee__track{ display:flex; overflow:hidden; flex:1; -webkit-mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image:linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
 .marquee__list{ display:flex; flex:none; gap:40px; padding:18px 20px; animation:marquee 48s linear infinite; }
+.marquee.is-off .marquee__list, .marquee.is-paused .marquee__list{ animation-play-state:paused; }
 .marquee__list li{ white-space:nowrap; font-size:.9375rem; color:var(--txt-2); }
 .marquee__list b{ color:var(--red); font-weight:700; margin-right:6px; }
 /* depoimentos no claro: prints continuam no "celular" escuro; aspas, nomes e setas em vermelho */
