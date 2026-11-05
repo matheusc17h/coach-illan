@@ -383,11 +383,17 @@ if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
       s.src = small ? s.dataset.src.replace('hero-bg.', 'hero-bg-mobile.').replace('v=2', 'v=3') : s.dataset.src;
     });
     if (small) v.poster = 'assets/hero-bg-poster-mobile.jpg?v=3';
-    v.preload = 'auto';
-    v.autoplay = true;
     v.addEventListener('playing', () => v.classList.add('is-on'), { once: true });
-    v.load();
-    new IntersectionObserver(([e]) => { e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }).observe(v);
+    // o vídeo só baixa depois que a página terminou de carregar: texto e imagens chegam primeiro
+    // (até lá aparece o poster, que é o primeiro quadro do vídeo, então o visual não muda)
+    const liga = () => {
+      v.preload = 'auto';
+      v.autoplay = true;
+      v.load();
+      new IntersectionObserver(([e]) => { e.isIntersecting ? v.play().catch(() => {}) : v.pause(); }).observe(v);
+    };
+    const depois = () => (window.requestIdleCallback ? requestIdleCallback(liga, { timeout: 1500 }) : setTimeout(liga, 300));
+    document.readyState === 'complete' ? depois() : addEventListener('load', depois, { once: true });
   }
 }
 
@@ -676,16 +682,30 @@ addEventListener('DOMContentLoaded', () => {
     // o título some só quando o SplitText existe; espera as fontes (no máx. 3s) antes de quebrar
     if (hasSplit) gsap.set('[data-letters]', { opacity: 0 });
     const fontsReady = document.fonts ? Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 3000))]) : Promise.resolve();
-    if (hasSplit) fontsReady.then(() => ctx.add(() => {
-      $$('[data-letters]').forEach(el => {
+    // cada título só é quebrado em letras quando chega perto da tela (não todos no carregamento):
+    // menos trabalho pro celular enquanto a página abre
+    let lettersIo = null;
+    if (hasSplit) fontsReady.then(() => {
+      lettersIo = new IntersectionObserver(entries => entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        lettersIo.unobserve(e.target);
+        ctx.add(() => splitLetters(e.target));
+      }), { rootMargin: '0px 0px 50% 0px' });
+      $$('[data-letters]').forEach(el => lettersIo.observe(el));
+    });
+    ctx.add(() => () => { lettersIo && lettersIo.disconnect(); $$('[data-letters]').forEach(el => el.classList.remove('is-split')); });
+    const splitLetters = el => {
         const split = SplitText.create(el, { type: 'words,chars', wordsClass: 'lt-word', charsClass: 'lt-char' });
         // o gradiente do .hl é recortado no texto do pai: passa pra cada letra, alinhado ao span original
         el.classList.add('is-split');
+        // mede todas as letras primeiro e só depois escreve: um cálculo de layout por título, não um por letra
         $$('.hl', el).forEach(hl => {
           const box = hl.getBoundingClientRect();
-          $$('.lt-char', hl).forEach(c => {
+          const chars = $$('.lt-char', hl);
+          const lefts = chars.map(c => c.getBoundingClientRect().left);
+          chars.forEach((c, i) => {
             c.style.backgroundSize = `${box.width}px 100%`;
-            c.style.backgroundPosition = `${box.left - c.getBoundingClientRect().left}px 0`;
+            c.style.backgroundPosition = `${box.left - lefts[i]}px 0`;
           });
         });
         gsap.set(split.chars, { opacity: 0 });
@@ -698,13 +718,10 @@ addEventListener('DOMContentLoaded', () => {
           // devolve o HTML original: gradiente contínuo e quebra de linha livre no resize
           onComplete: () => { split.revert(); el.classList.remove('is-split'); },
         });
-      });
-      ScrollTrigger.refresh();
-      return () => $$('[data-letters]').forEach(el => el.classList.remove('is-split'));
-    }));
+    };
 
-    // fontes assíncronas e imagens mudam alturas: recalcula os gatilhos
-    addEventListener('load', () => ScrollTrigger.refresh());
-    if (document.fonts) document.fonts.ready.then(() => ScrollTrigger.refresh());
+    // fontes assíncronas e imagens mudam alturas: recalcula os gatilhos UMA vez, quando as duas terminarem
+    const loaded = document.readyState === 'complete' ? Promise.resolve() : new Promise(r => addEventListener('load', r, { once: true }));
+    Promise.all([loaded, fontsReady]).then(() => ScrollTrigger.refresh());
   });
 });
