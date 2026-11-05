@@ -227,6 +227,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 }
 .hero__sub{ margin-top:18px; color:var(--txt-2); font-size:1.0625rem; max-width:50ch; }
 .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+/* celular: chips centralizados; quebram em "triângulo" (2 em cima, 1 embaixo) ou ficam numa linha só se couber */
+@media (max-width:959px){ .chips{ justify-content:center; } }
 .chips li{ font-size:.8125rem; font-weight:700; padding:7px 14px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid var(--line); }
 .chips li::before{ content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--red); margin-right:8px; vertical-align:middle; box-shadow:0 0 8px var(--red); }
 .hero .cta{ margin-top:28px; }
@@ -393,6 +395,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 
 /* ---------- prazer, coach illan ---------- */
 .sec--about{ overflow:hidden; }
+/* celular: menos vazio entre "Ver as 22 aulas" e a foto do Illan */
+@media (max-width:959px){ #mudou{ padding-bottom:40px; } .sec--about{ padding-top:24px; } }
 .about{ display:grid; gap:48px; align-items:center; }
 /* colagem: foto do Illan + post do título sobreposto no canto */
 .about__media{ position:relative; width:min(100%, 460px); margin-inline:auto; padding-bottom:18%; }
@@ -499,6 +503,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   .nivel[open]::details-content,.faq details[open]::details-content{ height:auto; }
 }
 @media (min-width:1000px){ .produto{ grid-template-columns:minmax(300px, 400px) 1fr; gap:64px; } }
+/* celular: só o título "O que tem dentro?" fica centralizado */
+@media (max-width:959px){ #aulas-title{ text-align:center; } }
 
 /* ---------- plano ---------- */
 /* seções claras: fundo branco, letras pretas, detalhes em vermelho fechado (legível no branco) */
@@ -706,6 +712,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .legal{ font-size:.8125rem; color:var(--txt-2); max-width:80ch; }
 @media (max-width:899px){ .footer{ padding-bottom:120px; } }
 @media (min-width:1000px){ .footer__in{ justify-items:center; text-align:center; } .footer__links{ justify-content:center; } }
+/* celular: tudo centralizado (logo, links na mesma linha e o texto legal) */
+@media (max-width:959px){ .footer__in{ justify-items:center; text-align:center; } .footer__links{ justify-content:center; } }
 
 /* ---------- CTA flutuante (mobile) ---------- */
 .dock{

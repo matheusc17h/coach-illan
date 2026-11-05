@@ -521,10 +521,42 @@ addEventListener('DOMContentLoaded', () => {
 
     /* sobre: as duas colunas chegam de lados opostos e param onde se encontram:
        foto + post vêm da esquerda, texto vem da direita (a seção tem overflow:hidden, sem rolagem lateral) */
-    const lado = side ? 140 : 60;
-    gsap.timeline({ scrollTrigger: { trigger: '.about', start: 'top 75%', once: true }, defaults: { duration: 1.1, ease: 'power3.out' } })
-      .from('.about__media', { x: -lado, opacity: 0 }, 0)
-      .from('.about__text', { x: lado, opacity: 0 }, .1);
+    if (desk) {
+      gsap.timeline({ scrollTrigger: { trigger: '.about', start: 'top 75%', once: true }, defaults: { duration: 1.1, ease: 'power3.out' } })
+        .from('.about__media', { x: -140, opacity: 0 }, 0)
+        .from('.about__text', { x: 140, opacity: 0 }, .1);
+    } else {
+      /* celular: a foto sobe de baixo quando chega a ~65% da tela; só depois dela o texto de baixo
+         aparece, cada bloco ao entrar na tela (se a pessoa rolar rápido, eles esperam a foto) */
+      const media = $('.about__media');
+      const textos = $$('.about__text > :not(.about__title):not(.trofeus)');
+      gsap.set(media, { opacity: 0, y: 90 });
+      gsap.set(textos, { opacity: 0, y: 28 });
+      let fotoPronta = false;
+      const fila = [];
+      const mostra = els => gsap.to(els, { opacity: 1, y: 0, duration: .7, ease: 'power3.out', stagger: .15, overwrite: true });
+      ScrollTrigger.create({ trigger: media, start: 'top 65%', once: true, onEnter: () =>
+        gsap.to(media, { opacity: 1, y: 0, duration: .9, ease: 'power3.out',
+          onComplete: () => { fotoPronta = true; if (fila.length) mostra(fila.splice(0)); } }) });
+      ScrollTrigger.batch(textos, { start: 'top 85%', once: true, onEnter: els => fotoPronta ? mostra(els) : fila.push(...els) });
+    }
+
+    /* celular: conquistas por etapa. O "Campeão Sul-Americano" fica invisível e surge quando chega
+       no meio da tela; só depois que ele termina, os três de baixo entram (um a um) ao chegarem
+       mais ou menos na mesma altura. Se a pessoa rolar rápido, os de baixo esperam o de cima acabar. */
+    if (!desk) {
+      const topo = $('.trofeus__top'), resto = $$('.trofeus li:not(.trofeus__top)');
+      gsap.set(topo, { opacity: 0, y: 30, scale: .94 });
+      gsap.set(resto, { opacity: 0, y: 30 });
+      let topoPronto = false, restoNaVez = false;
+      const entraResto = () => gsap.to(resto, { opacity: 1, y: 0, duration: .6, ease: 'power3.out', stagger: .15 });
+      ScrollTrigger.create({ trigger: topo, start: 'top 55%', once: true, onEnter: () =>
+        gsap.to(topo, { opacity: 1, y: 0, scale: 1, duration: .8, ease: 'back.out(1.6)',
+          onComplete: () => { topoPronto = true; if (restoNaVez) entraResto(); } }) });
+      ScrollTrigger.create({ trigger: resto[0], start: 'top 60%', once: true, onEnter: () => {
+        restoNaVez = true; if (topoPronto) entraResto();
+      } });
+    }
 
     /* sobre: o post do título 'cai' sobre a foto conforme a colagem entra na tela */
     gsap.fromTo('.post', { rotate: 8, y: 80, x: 20 }, { rotate: -3, y: 0, x: 0, ease: 'none', scrollTrigger: { trigger: '.about__media', start: 'top 90%', end: 'center 55%', scrub: true } });
@@ -547,7 +579,14 @@ addEventListener('DOMContentLoaded', () => {
       const tl = gsap.timeline({ scrollTrigger: { trigger: '.produto', start: 'top 70%', once: true }, defaults: { ease: 'power3.out' } });
       passosAulas.forEach(([alvo, de], i) => tl.from(alvo, de, i ? '-=.25' : 0));
     } else {
-      passosAulas.forEach(([alvo, de]) => gsap.from(alvo, { ...de, ease: 'power3.out', scrollTrigger: { trigger: alvo, start: 'top 88%', once: true } }));
+      // celular: a seção inteira fica invisível e surge quando o topo dela chega a ~60% da tela;
+      // título e etapas disparam um pouco depois, pra não animarem com a seção ainda escondida
+      if (!desk) {
+        gsap.set('.produto', { opacity: 0, y: 40 });
+        gsap.to('.produto', { opacity: 1, y: 0, duration: .8, ease: 'power3.out', scrollTrigger: { trigger: '.produto', start: 'top 60%', once: true } });
+        $('#aulas-title').dataset.letters = 'top 58%';
+      }
+      passosAulas.forEach(([alvo, de]) => gsap.from(alvo, { ...de, ease: 'power3.out', scrollTrigger: { trigger: alvo, start: desk ? 'top 88%' : 'top 70%', once: true } }));
     }
 
     /* plano: linha do tempo. A linha enche com o scroll; o ponto de cada semana
