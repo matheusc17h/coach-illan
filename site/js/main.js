@@ -410,7 +410,10 @@ if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
   };
   new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting && e.boundingClientRect.top < 0; sync(); }).observe($('.hero'));
   new IntersectionObserver(([e]) => { onOffer = e.isIntersecting; sync(); }, { threshold: .15 }).observe($('#oferta'));
-  new IntersectionObserver(([e]) => { onFinal = e.isIntersecting; sync(); }).observe($('.final'));
+  // some na faixa final e no rodapé (o rodapé não guarda espaço embaixo pra ele)
+  const fim = new Set();
+  const fimIo = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? fim.add(e.target) : fim.delete(e.target)); onFinal = fim.size > 0; sync(); });
+  fimIo.observe($('.final')); fimIo.observe($('.footer'));
 }
 
 /* =========================================================

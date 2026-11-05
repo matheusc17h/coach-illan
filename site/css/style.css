@@ -20,7 +20,9 @@
   --glow:    0 0 0 1px rgba(255,48,72,.18), 0 18px 60px -12px rgba(255,30,50,.35);
   /* papéis fora da paleta principal: cada um vem de um objeto real do mundo do Illan */
   --focus:      #ff6b7a;                                   /* anel de foco do teclado */
-  --trophy:     linear-gradient(135deg, #f6d27a, #c98d1c); /* só troféu e selo de campeão */
+  /* ouro de troféu: brilho claro, ouro cheio e borda mais escura, como metal polido (só troféu e campeão) */
+  --trophy:     linear-gradient(135deg, #fff1b8 0%, #f5cd5b 22%, #d99a1e 48%, #ffe08a 66%, #c4841a 86%, #a86d10 100%);
+  --trophy-tx:  linear-gradient(180deg, #fff6d2 0%, #ffd863 34%, #e9a91f 58%, #ffd56a 78%, #c98a17 100%);
   --trophy-ink: #2a1a00;
   --wa-bubble:  #202c33;   /* balão recebido do WhatsApp (os depoimentos são prints de lá) */
   --wa-online:  #25d366;
@@ -100,7 +102,9 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .tag--c{ justify-content:center; }
 .tag__pill{ border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:4px 12px; font-weight:700; font-size:.8125rem; }
 /* "campeão sul-americano": dourado do troféu, com sombra leve, pra ler bem em cima do fundo vermelho do vídeo */
-.tag__txt{ font-family:var(--f-title); font-weight:700; font-size:1.0625rem; color:var(--gold); text-shadow:0 1px 8px rgba(0,0,0,.6); }
+.tag__txt{ font-family:var(--f-title); font-weight:800; font-size:1.0625rem; color:#ffd863;
+  background:var(--trophy-tx); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 1px 1px rgba(60,30,0,.9)) drop-shadow(0 0 10px rgba(255,190,60,.35)); }
 /* palavras com hífen não quebram no meio ("sul-americano") */
 .nw{ white-space:nowrap; }
 /* celular: "Você mudou junto?" vai pra linha de baixo, a pergunta fica inteira */
@@ -416,7 +420,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .post{ position:absolute; right:0; bottom:0; width:48%; transform:rotate(-3deg); z-index:2; will-change:transform; }
 .post img{ width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:var(--r-sm); box-shadow:0 24px 50px -10px rgba(0,0,0,.8); }
 .post figcaption{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; margin-top:10px; font-size:.75rem; color:var(--txt-2); }
-.post__selo{ background:var(--trophy); color:var(--trophy-ink); font-weight:800; font-size:.75rem; padding:4px 10px; border-radius:999px; }
+.post__selo{ background:var(--trophy); color:var(--trophy-ink); box-shadow:inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(120,70,0,.5), 0 4px 14px -4px rgba(240,170,40,.55); font-weight:800; font-size:.75rem; padding:4px 10px; border-radius:999px; }
 .about__title{ font-family:var(--f-title); font-size:clamp(2.4rem, 1.6rem + 3.4vw, 4rem); line-height:1.02; letter-spacing:-.02em; }
 .about__hi{ display:block; font-weight:300; }
 .about__title .hl{ font-weight:800; }
@@ -723,7 +727,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .footer__links a{ display:inline-block; padding:10px 0; font-weight:600; font-size:.9375rem; text-decoration:none; transition:color .2s; }
 .footer__links a:hover{ color:var(--red); }
 .legal{ font-size:.8125rem; color:var(--txt-2); max-width:80ch; }
-@media (max-width:899px){ .footer{ padding-bottom:120px; } }
+/* celular: o botão flutuante some no rodapé (main.js), então não precisa reservar espaço pra ele */
+@media (max-width:899px){ .footer{ padding-bottom:40px; } }
 @media (min-width:1000px){ .footer__in{ justify-items:center; text-align:center; } .footer__links{ justify-content:center; } }
 /* celular: tudo centralizado (logo, links na mesma linha e o texto legal) */
 @media (max-width:959px){ .footer__in{ justify-items:center; text-align:center; } .footer__links{ justify-content:center; } }
