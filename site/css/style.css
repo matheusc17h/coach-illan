@@ -99,7 +99,12 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .tag{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; font-size:.8125rem; }
 .tag--c{ justify-content:center; }
 .tag__pill{ border:1px solid rgba(255,255,255,.35); border-radius:999px; padding:4px 12px; font-weight:700; font-size:.8125rem; }
-.tag__txt{ font-family:var(--f-title); font-weight:600; font-size:1.0625rem; background:var(--grad-tx); -webkit-background-clip:text; background-clip:text; color:transparent; }
+/* "campeão sul-americano": dourado do troféu, com sombra leve, pra ler bem em cima do fundo vermelho do vídeo */
+.tag__txt{ font-family:var(--f-title); font-weight:700; font-size:1.0625rem; color:var(--gold); text-shadow:0 1px 8px rgba(0,0,0,.6); }
+/* palavras com hífen não quebram no meio ("sul-americano") */
+.nw{ white-space:nowrap; }
+/* celular: "Você mudou junto?" vai pra linha de baixo, a pergunta fica inteira */
+@media (max-width:959px){ #mudou-title .hl{ display:block; } }
 
 /* ---------- botões ---------- */
 .btn{
@@ -427,6 +432,14 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .trofeus small{ color:var(--txt-2); font-size:.8125rem; }
 .trofeus__top{ grid-column:1 / -1; border-color:rgba(240,192,79,.45)!important; background:linear-gradient(90deg, rgba(240,192,79,.12), transparent)!important; }
 .trofeus__top svg{ width:28px; height:28px; color:var(--gold); flex:none; }
+.trofeus small{ white-space:nowrap; } /* "e-Libertadores" nunca quebra no hífen */
+/* celular: Campeão em cima (largura toda), os dois Top 8 lado a lado e o Top 17 centralizado
+   embaixo, com largura toda pra "e-Libertadores" caber inteiro. Os três de baixo ficam centralizados. */
+@media (max-width:559px){
+  .trofeus{ grid-template-columns:1fr 1fr; }
+  .trofeus li:not(.trofeus__top){ justify-content:center; text-align:center; }
+  .trofeus li:last-child{ grid-column:1 / -1; }
+}
 @media (min-width:900px){
   .about{ grid-template-columns:1fr 1.1fr; gap:64px; }
   .about__media{ width:100%; max-width:520px; }
@@ -508,7 +521,7 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 
 /* ---------- plano ---------- */
 /* seções claras: fundo branco, letras pretas, detalhes em vermelho fechado (legível no branco) */
-.sec--plano, #aulas{ overflow-x:clip; } /* entradas laterais (±48px) e a capa girada não podem criar scroll horizontal */
+.sec--plano, #aulas, #pra-voce{ overflow-x:hidden; overflow-x:clip; } /* entradas laterais (±48px) e a capa girada não podem criar scroll horizontal */
 .sec--light{ --pr:#c8102e; --ink:#111; --ink-2:#3d3d3d; background:#fff; color:var(--ink); }
 .sec--light .h2{ color:var(--ink); }
 .sec--light .lead, .sec--light .micro{ color:var(--ink-2); }
@@ -837,7 +850,6 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   .float{ max-width:180px; padding:8px 10px 8px 8px; }
   .float__ico{ width:26px; height:26px; }
   .btn--lg{ padding:14px 22px; font-size:1rem; }
-  .trofeus{ grid-template-columns:1fr 1fr; }
   .logo__a{ font-size:1rem; }
 }
 

@@ -430,6 +430,12 @@ addEventListener('DOMContentLoaded', () => {
     });
     // estado inicial antes de entrar na tela
     const prep = (targets, from) => gsap.set(targets, from);
+    // presa à barra de rolagem (scrub): descendo aparece, subindo some de novo
+    const rola = (alvo, de, start, end) => gsap.fromTo(alvo, de, { opacity: 1, y: 0, scale: 1, ease: 'none',
+      scrollTrigger: { trigger: alvo, start, end, scrub: .4 } });
+
+    /* celular: "o que mudou no FC 27": cada card aparece um de cada vez, seguindo a rolagem */
+    if (!desk) $$('.mudancas .card').forEach(c => rola(c, { opacity: 0, y: 60, scale: .95 }, 'top 95%', 'top 70%'));
 
     /* controle: tamanho e posição de base (menor e mais perto da mão que no recorte) */
     gsap.set('.hero__controle', { transformOrigin: '49.5% 55%', x: 0, y: 0, yPercent: 3.5, scale: .72, transformPerspective: 900 });
@@ -526,37 +532,25 @@ addEventListener('DOMContentLoaded', () => {
         .from('.about__media', { x: -140, opacity: 0 }, 0)
         .from('.about__text', { x: 140, opacity: 0 }, .1);
     } else {
-      /* celular: a foto sobe de baixo quando chega a ~65% da tela; só depois dela o texto de baixo
-         aparece, cada bloco ao entrar na tela (se a pessoa rolar rápido, eles esperam a foto) */
-      const media = $('.about__media');
-      const textos = $$('.about__text > :not(.about__title):not(.trofeus)');
-      gsap.set(media, { opacity: 0, y: 90 });
-      gsap.set(textos, { opacity: 0, y: 28 });
-      let fotoPronta = false;
-      const fila = [];
-      const mostra = els => gsap.to(els, { opacity: 1, y: 0, duration: .7, ease: 'power3.out', stagger: .15, overwrite: true });
-      ScrollTrigger.create({ trigger: media, start: 'top 65%', once: true, onEnter: () =>
-        gsap.to(media, { opacity: 1, y: 0, duration: .9, ease: 'power3.out',
-          onComplete: () => { fotoPronta = true; if (fila.length) mostra(fila.splice(0)); } }) });
-      ScrollTrigger.batch(textos, { start: 'top 85%', once: true, onEnter: els => fotoPronta ? mostra(els) : fila.push(...els) });
+      /* celular: a seção inteira segue a barra de rolagem (scrub). Descendo, cada parte aparece;
+         subindo, ela some de novo. Começa quando a parte está ~30% acima da base da tela. */
+      // foto + post sobem de baixo
+      rola('.about__media', { opacity: 0, y: 120, scale: .94 }, 'top 85%', 'top 40%');
+      // texto embaixo da foto: cada bloco sobe conforme passa pela tela
+      $$('.about__text > :not(.trofeus):not(.about__title):not(.cta)').forEach(el => rola(el, { opacity: 0, y: 40 }, 'top 92%', 'top 68%'));
+      /* conquistas em sequência, presas à rolagem: o Campeão (invisível, bem menor) cresce e acende
+         primeiro; só depois entram Top 8 Pro Open, Top 8 Cash Cup e Top 17 e-Libertadores, um a um.
+         O botão "Quero aprender com um campeão" é o último passo: só aparece depois das conquistas. */
+      const topo = $('.trofeus__top'), resto = $$('.trofeus li:not(.trofeus__top)'), cta = $('.about__text .cta');
+      gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.trofeus', start: 'top 85%', endTrigger: cta, end: 'top 62%', scrub: .4 } })
+        .fromTo(topo, { opacity: 0, y: 50, scale: .8 }, { opacity: 1, y: 0, scale: 1, duration: 1 })
+        .fromTo(resto, { opacity: 0, y: 40, scale: .9 }, { opacity: 1, y: 0, scale: 1, duration: .7, stagger: .45 }, '+=.15')
+        .fromTo(cta, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .8 }, '+=.2');
     }
 
     /* celular: conquistas por etapa. O "Campeão Sul-Americano" fica invisível e surge quando chega
        no meio da tela; só depois que ele termina, os três de baixo entram (um a um) ao chegarem
        mais ou menos na mesma altura. Se a pessoa rolar rápido, os de baixo esperam o de cima acabar. */
-    if (!desk) {
-      const topo = $('.trofeus__top'), resto = $$('.trofeus li:not(.trofeus__top)');
-      gsap.set(topo, { opacity: 0, y: 30, scale: .94 });
-      gsap.set(resto, { opacity: 0, y: 30 });
-      let topoPronto = false, restoNaVez = false;
-      const entraResto = () => gsap.to(resto, { opacity: 1, y: 0, duration: .6, ease: 'power3.out', stagger: .15 });
-      ScrollTrigger.create({ trigger: topo, start: 'top 55%', once: true, onEnter: () =>
-        gsap.to(topo, { opacity: 1, y: 0, scale: 1, duration: .8, ease: 'back.out(1.6)',
-          onComplete: () => { topoPronto = true; if (restoNaVez) entraResto(); } }) });
-      ScrollTrigger.create({ trigger: resto[0], start: 'top 60%', once: true, onEnter: () => {
-        restoNaVez = true; if (topoPronto) entraResto();
-      } });
-    }
 
     /* sobre: o post do título 'cai' sobre a foto conforme a colagem entra na tela */
     gsap.fromTo('.post', { rotate: 8, y: 80, x: 20 }, { rotate: -3, y: 0, x: 0, ease: 'none', scrollTrigger: { trigger: '.about__media', start: 'top 90%', end: 'center 55%', scrub: true } });
