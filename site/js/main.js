@@ -24,6 +24,8 @@ const players = [
 // Prints reais dos alunos. "hook" é um trecho copiado do próprio print, com a grafia original.
 // destaque: true = arte do Illan com vários prints, mostrada grande no topo da seção (e primeira no lightbox).
 const depoimentos = [
+  // primeira do carrossel (é destaque e vem antes das outras destaques)
+  { img: 'dep-13', destaque: true, w: 720, h: 1273, hook: 'Sai de um nível bem casual para um nível bem legal', alt: 'Arte "Feedback dos alunos EA FC 27" com print de WhatsApp do aluno Gabriel: "sai de um nível bem casual para um nível bem legal", venceu um jogador que estava 64-0 e fechou a Weekend League 10-1, com print da vitória por 5 a 6.' },
   { img: 'dep-01', w: 328, h: 541, hook: 'Seu trabalho é muito foda', alt: 'Conversa de WhatsApp. O aluno escreve: "Seu trabalho é muito foda", "Fácil de entender", "Quero ficar bom nesse joguinho".' },
   { img: 'dep-06', w: 329, h: 507, hook: 'Tava marcando igual uma porta', alt: 'Conversa de WhatsApp. O aluno escreve: "Tava marcando igual uma porta, agora tomo 1 gol max por partida, melhorei bastante nisso" e "parece até outra pessoa, principalmente a defesa".' },
   { img: 'dep-07', w: 178, h: 439, hook: 'Consegui subir da div 2 pra elite', alt: 'Print com a tela de Nova Divisão do jogo e a mensagem: "Pô teu coach é brabo! Melhora imediata na minha gameplay. Consegui subir da div 2 pra elite sem perder nenhum jogo e ganhando de dois pro players no meio do caminho."' },
