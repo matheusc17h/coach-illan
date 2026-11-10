@@ -577,7 +577,7 @@ addEventListener('DOMContentLoaded', () => {
       ['#aulas .lead', { y: 24, opacity: 0, duration: .6 }],
       ['.capa', { rotate: -6, y: 60, opacity: 0, duration: .9 }],
       ['#aulas .checks li', { x: -28, opacity: 0, duration: .5, stagger: .12 }],
-      ['#aulas .nivel', { x: 48, opacity: 0, duration: .55, stagger: .12 }],
+      ['#aulas .niveis__dica, #aulas .nivel', { x: 48, opacity: 0, duration: .55, stagger: .12 }],
       ['#aulas .niveis .cta', { y: 24, opacity: 0, duration: .6 }],
     ];
     if (cols) {
