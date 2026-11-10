@@ -463,9 +463,7 @@ addEventListener('DOMContentLoaded', () => {
     heroTl
       // no celular os títulos (.proof) ficam de fora: entram um por um com a rolagem, logo abaixo
       .from(desk ? '.hero__text > :not(.hero__title)' : '.hero__text > :not(.hero__title):not(.proof)', { opacity: 0, y: 24, duration: .7, stagger: .08 }, 0)
-      .from('.hero__img', { opacity: 0, y: 40, scale: .96, duration: 1 }, .1)
       .from('.hero__glow', { opacity: 0, scale: .6, duration: 1.2 }, 0)
-      .from('.float', { opacity: 0, y: 20, scale: .9, duration: .6, stagger: .15 }, .55)
       // o controle cai de leve na mão, girando em 3D, e começa a flutuar
       .from('.hero__controle', { y: -20, rotationY: -50, opacity: 0, duration: 1.1, ease: 'back.out(1.4)' }, .45)
       .add(() => ctx.add(() => {
@@ -487,6 +485,21 @@ addEventListener('DOMContentLoaded', () => {
         io.observe($('.hero'));
         return () => io.disconnect();
       }));
+
+    if (desk) {
+      heroTl
+        .from('.hero__img', { opacity: 0, y: 40, scale: .96, duration: 1 }, .1)
+        .from('.float', { opacity: 0, y: 20, scale: .9, duration: .6, stagger: .15 }, .55);
+    } else {
+      /* celular: a foto fica abaixo da primeira tela. Conforme a pessoa desce, o Illan (com o controle)
+         sobe de baixo até a posição dele; só depois entram "Nova divisão: Elite" e "Aluno do Illan",
+         um de cada vez. Tudo preso à rolagem: subindo a tela, volta e some. */
+      gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: {
+        trigger: '.hero__media', start: 'top 92%', endTrigger: '.float--a', end: 'bottom 88%', scrub: .5 } })
+        .fromTo('.hero__img', { opacity: 0, y: 140 }, { opacity: 1, y: 0, duration: 1, ease: 'power1.out' })
+        .fromTo('.float--a', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .45 }, '+=.08')
+        .fromTo('.float--b', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .45 }, '+=.12');
+    }
 
     /* controle: no desktop, inclina em 3D na direção do mouse (no wrap, pra não brigar com a flutuação) */
     if (desk) {
