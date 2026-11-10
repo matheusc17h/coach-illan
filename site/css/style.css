@@ -96,6 +96,14 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   -webkit-background-clip:text; background-clip:text;
   color:transparent; -webkit-text-fill-color:transparent;
 }
+/* celular: "comece a jogar no manual." em branco com sublinhado vermelho da marca. O rosa em degradê
+   sumia em cima do vídeo vermelho; assim lê de bate-pronto e o vermelho continua marcando a frase.
+   (o sublinhado entra quando as letras terminam de acender) */
+@media (max-width:959px){
+  .hero__title .hl, [data-letters].hero__title.is-split .hl .lt-char{ background:none; color:#fff; -webkit-text-fill-color:#fff; }
+  .hero__title .hl{ text-decoration:underline; text-decoration-color:var(--red); text-decoration-thickness:.08em; text-underline-offset:.24em; text-decoration-skip-ink:none; }
+  .hero__title.is-split .hl{ text-decoration:none; }
+}
 .lead{ color:var(--txt-2); max-width:60ch; margin-top:16px; }
 .sec__head{ max-width:760px; margin-bottom:40px; }
 .sec__head--c{ margin-inline:auto; text-align:center; }
@@ -112,6 +120,8 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .nw{ white-space:nowrap; }
 /* celular: "Você mudou junto?" vai pra linha de baixo, a pergunta fica inteira */
 @media (max-width:959px){ #mudou-title .hl{ display:block; } }
+/* celular: título e texto de "O FC 27 tirou a defesa da IA" centralizados */
+@media (max-width:959px){ #mudou .sec__head{ margin-inline:auto; text-align:center; } #mudou .sec__head .lead{ margin-inline:auto; } }
 
 /* ---------- botões ---------- */
 .btn{
@@ -611,6 +621,12 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .fut-card__info li::before{ content:""; position:absolute; left:0; top:.55em; width:6px; height:6px; border-radius:50%; background:var(--red); }
 .fut-card__coach{ margin-bottom:10px; padding:4px 10px; border-radius:999px; font-size:.6875rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:rgba(255,36,52,.22); border:1px solid rgba(255,58,76,.5); }
 @media (min-width:720px){ .fut{ grid-template-columns:repeat(3, 1fr); max-width:none; } }
+/* celular: "Coach", @ e conquistas dos players centralizados; a bolinha vermelha anda junto com o texto */
+@media (max-width:959px){
+  .fut-card__body{ align-items:center; text-align:center; }
+  .fut-card__info li{ padding-left:0; }
+  .fut-card__info li::before{ position:static; display:inline-block; vertical-align:middle; margin:0 8px 2px 0; }
+}
 @media (min-width:1000px){ .fut{ gap:24px; } }
 
 /* ---------- depoimentos ---------- */
