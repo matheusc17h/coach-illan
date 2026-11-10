@@ -542,7 +542,10 @@ addEventListener('DOMContentLoaded', () => {
       const tl = gsap.timeline({ scrollTrigger: { trigger: '.pv', start: 'top 75%', once: true }, defaults: { duration: 1, ease: 'power3.out' } });
       pvCards.forEach((card, i) => tl.from(card, pvDe(card, i, 140), i === 0 ? 0 : .15 + (i - 1) * .2));
     } else {
-      pvCards.forEach((card, i) => gsap.from(card, { ...pvDe(card, i, 60), duration: .9, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 88%', once: true } }));
+      // celular: uma foto de cada vez, presa à rolagem. 1ª vem da esquerda, 2ª da direita, 3ª de baixo pra cima
+      const pvMob = [{ x: -120 }, { x: 120 }, { y: 120 }];
+      pvCards.forEach((card, i) => gsap.fromTo(card, { opacity: 0, x: 0, y: 0, ...pvMob[i % 3] }, {
+        opacity: 1, x: 0, y: 0, ease: 'power1.out', scrollTrigger: { trigger: card, start: 'top 95%', end: 'top 55%', scrub: .5 } }));
     }
 
     /* Daqui pra baixo, nada de "sobe e aparece" genérico em todo bloco: o texto já está lá quando a

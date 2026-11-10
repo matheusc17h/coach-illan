@@ -89,6 +89,9 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .h2--c{ text-align:center; }
 /* celular: título do hero centralizado */
 @media (max-width:959px){ .hero__title{ text-align:center; } }
+/* celular: parágrafo do topo centralizado como o título e os chips, com linhas de tamanho parecido
+   (sem o buraco que ficava antes de "sul-americano") */
+@media (max-width:959px){ .hero__sub{ text-align:center; text-wrap:balance; margin-inline:auto; } }
 /* revelação de letras: enquanto quebrado, o gradiente do .hl vai para cada letra */
 [data-letters].is-split .hl{ background:none; }
 [data-letters].is-split .hl .lt-char{
@@ -96,13 +99,13 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
   -webkit-background-clip:text; background-clip:text;
   color:transparent; -webkit-text-fill-color:transparent;
 }
-/* celular: "comece a jogar no manual." em branco com sublinhado vermelho da marca. O rosa em degradê
-   sumia em cima do vídeo vermelho; assim lê de bate-pronto e o vermelho continua marcando a frase.
-   (o sublinhado entra quando as letras terminam de acender) */
+/* celular: "comece a jogar no manual." em vermelho vivo da marca, com sombra escura colada embaixo
+   (efeito 3D) e um halo escuro: o vermelho se descola do vídeo vermelho e lê de bate-pronto */
 @media (max-width:959px){
-  .hero__title .hl, [data-letters].hero__title.is-split .hl .lt-char{ background:none; color:#fff; -webkit-text-fill-color:#fff; }
-  .hero__title .hl{ text-decoration:underline; text-decoration-color:var(--red); text-decoration-thickness:.08em; text-underline-offset:.24em; text-decoration-skip-ink:none; }
-  .hero__title.is-split .hl{ text-decoration:none; }
+  .hero__title .hl, [data-letters].hero__title.is-split .hl .lt-char{
+    background:none; color:#ff5468; -webkit-text-fill-color:#ff5468;
+    text-shadow:0 3px 0 #2a0005, 0 0 18px rgba(0,0,0,.9);
+  }
 }
 .lead{ color:var(--txt-2); max-width:60ch; margin-top:16px; }
 .sec__head{ max-width:760px; margin-bottom:40px; }
@@ -621,11 +624,11 @@ mark.fill{ background:var(--todo); color:#000; padding:0 .3em; border-radius:4px
 .fut-card__info li::before{ content:""; position:absolute; left:0; top:.55em; width:6px; height:6px; border-radius:50%; background:var(--red); }
 .fut-card__coach{ margin-bottom:10px; padding:4px 10px; border-radius:999px; font-size:.6875rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:rgba(255,36,52,.22); border:1px solid rgba(255,58,76,.5); }
 @media (min-width:720px){ .fut{ grid-template-columns:repeat(3, 1fr); max-width:none; } }
-/* celular: "Coach", @ e conquistas dos players centralizados; a bolinha vermelha anda junto com o texto */
+/* celular: "Coach" e @ centralizados. A lista de conquistas fica centralizada como bloco, mas as linhas
+   começam todas no mesmo ponto: as bolinhas vermelhas ficam uma embaixo da outra */
 @media (max-width:959px){
   .fut-card__body{ align-items:center; text-align:center; }
-  .fut-card__info li{ padding-left:0; }
-  .fut-card__info li::before{ position:static; display:inline-block; vertical-align:middle; margin:0 8px 2px 0; }
+  .fut-card__info{ text-align:left; max-width:100%; }
 }
 @media (min-width:1000px){ .fut{ gap:24px; } }
 
